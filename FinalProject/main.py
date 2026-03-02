@@ -5,6 +5,9 @@
 #----import modules
 import misc_utils as misc
 import ui
+import events as ev
+import tasks as tsk
+import alerts as als
 
 #----initialize variables
 
