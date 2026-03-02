@@ -14,3 +14,4 @@ import alerts as als
 #Main function
 def main():
     print("game now loading...")
+    ui.create_ui()
