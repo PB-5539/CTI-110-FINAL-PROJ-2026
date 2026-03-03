@@ -1,4 +1,5 @@
 import tkinter as tk
+import time as tm
 from tkinter import ttk
 import events as ev
 import tasks as tsk

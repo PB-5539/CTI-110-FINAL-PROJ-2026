@@ -1,4 +1,5 @@
 import random as rdm
+import time as tm
 import math
 
 def send_alert(text, urgency, sound): #urgency will be on a 1-3 scale

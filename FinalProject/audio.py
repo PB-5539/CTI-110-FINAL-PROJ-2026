@@ -1,4 +1,4 @@
 import winsound as ws
 import random as rdm
 import math
-import datetime as dt
+import time as tm
