@@ -17,9 +17,19 @@ import alerts as als
 
 #----initialize variables
 
-#----create dictionary
+#create dictionaries
+dict_buttons = {}
+dict_sliders = {}
+dict_labels = {}
+dict_entries = {}
+dict_frames = {}
 
-
-#Main function
+#----Main function
 def main():
     print("game now loading...")
+    ui.create_main_ui("main window", "300x400", True)
+
+
+#run game
+main()
+
