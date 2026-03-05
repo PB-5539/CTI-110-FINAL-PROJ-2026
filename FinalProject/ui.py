@@ -14,7 +14,16 @@ def create_main_ui(name, geometry, resizeable):
     root.geometry(geometry)
 
     print(f"creating sub uis with default geometry {geometry}")
-    settings = tk.Toplevel()
+#create windows
+    start_menu = tk.Toplevel()
+    settings = tk.Toplevel()    
+#setup widgets
+    start_label_name = tk.Label(start_menu,)
+    start_button_play = tk.Button(start_menu,)
+#package widgets
+    start_label_name.pack(pady = 20)
+    start_button_play.pac(pady = 20)
+
 
     root.mainloop()
 
