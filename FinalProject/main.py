@@ -14,6 +14,7 @@ import ui
 import events as ev
 import tasks as tsk
 import alerts as als
+import pseudo_terminal as pt
 
 #----initialize variables
 
@@ -32,9 +33,9 @@ def main():
     print("game now loading...")
     ui.add_button("play", ls_root[2], 20, 20, None, dict_buttons)
     print(dict_buttons)
-    #actually starts the game
     
-    
+    pt.start_terminal()
+
     #run
     ui.run(ls_root[0])
 #run game
