@@ -7,26 +7,41 @@ import alerts as als
 import misc_utils as msc
 
 #-------------Create Main Windows------------
-def create_main_ui(name, geometry, resizeable):
+def create_main_ui(name, geometry, resizeable, ls_root):
     print(f"creating Main Ui element named: {name} with geometry: {geometry}")
     root = tk.Tk()
     root.title(name)
     root.geometry(geometry)
+    ls_root.insert(0, root)
+    root.withdraw()
 
     print(f"creating sub uis with default geometry {geometry}")
 #create windows
     start_menu = tk.Toplevel()
-    settings = tk.Toplevel()    
-#setup widgets
-    start_label_name = tk.Label(start_menu,)
-    start_button_play = tk.Button(start_menu,)
-#package widgets
-    start_label_name.pack(pady = 20)
-    start_button_play.pac(pady = 20)
+    start_menu.title("A Good Enough Cycle")
+    start_menu.geometry(geometry)
+    
+    settings = tk.Toplevel()
+    settings.title("Settings")
+    settings.geometry(geometry)
+    settings.withdraw()
+    
+    ls_root.insert(1, settings)
+    ls_root.insert(2, start_menu)
+    return root
 
 
-    root.mainloop()
 
 #-------------Create Other Widgets------------
-def add_button(name, parent, xpad, ypad, acton):
+def add_button(name, parent, xpad, ypad, acton, dict_buttons):
     print(f"creating Button Widget named: {name} name with parent: {parent} pad x: {xpad} pad y: {ypad} and action: {acton}")
+    button = tk.Button(parent, text=name)
+    button.pack(pady=ypad, padx=xpad)
+    dict_buttons[name] = "button"
+    return
+
+
+
+def run(root):
+    root.mainloop()
+    print("it ran!", root)

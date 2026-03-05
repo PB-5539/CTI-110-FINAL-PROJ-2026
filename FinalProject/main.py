@@ -18,6 +18,7 @@ import alerts as als
 #----initialize variables
 
 #create dictionaries
+ls_root = []
 dict_buttons = {}
 dict_sliders = {}
 dict_labels = {}
@@ -26,10 +27,16 @@ dict_frames = {}
 
 #----Main function
 def main():
+    ui.create_main_ui("main window", "300x400", True, ls_root)
+    print(ls_root)
     print("game now loading...")
-    ui.create_main_ui("main window", "300x400", True)
-
-
+    ui.add_button("play", ls_root[2], 20, 20, None, dict_buttons)
+    print(dict_buttons)
+    #actually starts the game
+    
+    
+    #run
+    ui.run(ls_root[0])
 #run game
 main()
 
