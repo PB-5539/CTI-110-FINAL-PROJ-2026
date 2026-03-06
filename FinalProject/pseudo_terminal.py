@@ -9,7 +9,7 @@ import winsound as ws
 import tkinter as tk
 from tkinter import ttk
 
-def start_terminal(ls_terminal):
+def start_terminal(ls_terminal, ls_root):
     ls_commands = ["hello","help","exit"]
     def handle_command(command):
         command = command.strip().lower()
@@ -46,6 +46,7 @@ def start_terminal(ls_terminal):
     entry.bind("<Return>", on_enter)
     entry.focus()
     ls_terminal.insert(0, text_area)
+    ls_root.insert(3, terminal)
 
 def startup(ls_terminal):
         ls_terminal.insert(tk.END, f"initializing...\n")    
@@ -59,3 +60,8 @@ def startup(ls_terminal):
         ls_terminal.insert(tk.END, f"Load [SUCCESS]\n") 
         ls_terminal.insert(tk.END, f"---------------\n")    
         ls_terminal.insert(tk.END, f'Welcome To EvrenOS, type "help" for a list of commands.\n')    
+def show(ls_root):
+    ls_root.deiconify()
+
+def hide(ls_root):
+    ls_root.withdraw()

@@ -43,5 +43,11 @@ def add_button(name, parent, xpad, ypad, acton, dict_buttons):
 
 
 def run(root):
-    root.mainloop()
     print("it ran!", root)
+    root.mainloop()
+
+def show(ls_root):
+    ls_root.deiconify()
+
+def hide(ls_root):
+    ls_root.withdraw()

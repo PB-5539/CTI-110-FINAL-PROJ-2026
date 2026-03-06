@@ -36,8 +36,9 @@ def main():
     ui.add_button("play", ls_root[2], 20, 20, None, dict_buttons)
     print(dict_buttons)
     
-    pt.start_terminal(ls_terminal)
+    pt.start_terminal(ls_terminal, ls_root)
     pt.startup(ls_terminal[0])
+    pt.hide(ls_root[3])
 
     #run
     ui.run(ls_root[0])
