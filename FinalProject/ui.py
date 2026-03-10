@@ -13,7 +13,6 @@ def create_main_ui(name, geometry, resizeable, ls_root):
     root.title(name)
     root.geometry(geometry)
     ls_root.insert(0, root)
-    root.withdraw()
 
     print(f"creating sub uis with default geometry {geometry}")
 #create windows
@@ -24,7 +23,6 @@ def create_main_ui(name, geometry, resizeable, ls_root):
     settings = tk.Toplevel()
     settings.title("Settings")
     settings.geometry(geometry)
-    settings.withdraw()
     
     ls_root.insert(1, settings)
     ls_root.insert(2, start_menu)

@@ -1,5 +1,5 @@
 #Parker Behagg
-#
+#2/22/26 - 5/12/26
 #FinalProject
 # Create a game using the 'time' and 'random' modules and use loops and functions (include a main() function to run the program).
 
@@ -19,8 +19,8 @@ import pseudo_terminal as pt
 #----initialize variables
 
 #create dictionaries and lists
-ls_root = []
-ls_terminal = []
+ls_root = [] #0=root 1=settings menu 2=start menu 3=psedo-terminal
+ls_terminal = [] #0=pseudo-terminal
 
 dict_buttons = {}
 dict_sliders = {}
@@ -39,8 +39,11 @@ def main():
     pt.start_terminal(ls_terminal, ls_root)
     pt.startup(ls_terminal[0])
     pt.hide(ls_root[3])
+    ui.hide(ls_root[2])
+    ui.hide(ls_root[1])
 
     #run
-    ui.run(ls_root[0])
+    ui.run(ls_root[0]) #THIS GOES AT THE END OF THE MAIN FUNCTION, ALL CODE AFTER IT WILL NOT RUN UNTILL THE WINDOWS HAVE EITHER BEEN CLOSED NY THE USER OR DESTROYRD VIA '<object name>.Destroy()'
+    print("it seems the windows have been closed!")
 #run game
 main()

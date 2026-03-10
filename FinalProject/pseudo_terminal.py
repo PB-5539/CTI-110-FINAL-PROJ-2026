@@ -10,7 +10,7 @@ import tkinter as tk
 from tkinter import ttk
 
 def start_terminal(ls_terminal, ls_root):
-    ls_commands = ["hello","help","exit"]
+    ls_commands = ["hello","help","exit", "pseudo"] #pseudo will have a similar function to sudo with the pseudo-terminal because funnies lol
     def handle_command(command):
         command = command.strip().lower()
         if command == "hello":
