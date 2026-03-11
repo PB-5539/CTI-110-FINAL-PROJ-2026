@@ -39,8 +39,9 @@ def main():
     pt.start_terminal(ls_terminal, ls_root)
     pt.startup(ls_terminal[0])
     pt.hide(ls_root[3])
-    ui.hide(ls_root[2])
+    ui.hide(ls_root[0])
     ui.hide(ls_root[1])
+    ui.add_button("settings", ls_root[2], 20, 20, None, dict_buttons)
 
     #run
     ui.run(ls_root[0]) #THIS GOES AT THE END OF THE MAIN FUNCTION, ALL CODE AFTER IT WILL NOT RUN UNTILL THE WINDOWS HAVE EITHER BEEN CLOSED NY THE USER OR DESTROYRD VIA '<object name>.Destroy()'
