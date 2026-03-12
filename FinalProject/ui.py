@@ -34,13 +34,9 @@ def create_main_ui(name, geometry, resizeable, ls_root):
 def add_button(name, parent, xpad, ypad, action, dict_buttons):
     print(f"creating Button Widget named: {name} name with parent: {parent} pad x: {xpad} pad y: {ypad} and action: {action}")
 
-    if action == "play":
-        button = tk.Button(parent, text=name, command=play())
-    elif action == "quit":
-        button = tk.Button(parent, text=name, command=quitgame())
-    else:
-        print(f"no function for button: {name} in parent: {parent}. attempted action input: {action}")
-        button = tk.Button(parent, text=name)
+
+    button = tk.Button(parent, text=name, command=action)
+    print(f"no function for button: {name} in parent: {parent}. attempted action input: {action}")
     button.pack(pady=ypad, padx=xpad)
     dict_buttons[name] = "button"
     return
@@ -48,9 +44,20 @@ def add_button(name, parent, xpad, ypad, action, dict_buttons):
 #------------Button actions------------
 def play():
     print("play!")
-def quitgame():
+
+def quitgame(ls_root):
+    ls_root.destroy()
     print("buttoneventinterupt-quit")
 
+def settings(ls_root):
+    if ls_root.winfo_exists():
+        ls_root.deiconify()
+    else:
+        settings = tk.Toplevel()
+    settings.title("Settings")
+    settings.geometry("300x400")
+        
+    print("open settings!")
 
 
 def run(root):
