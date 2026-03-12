@@ -15,12 +15,14 @@ import events as ev
 import tasks as tsk
 import alerts as als
 import pseudo_terminal as pt
+import loop
 
 #----initialize variables
 
 #create dictionaries and lists
 ls_root = [] #0=root 1=settings menu 2=main game window 3=psedo-terminal
 ls_terminal = [] #0=pseudo-terminal
+ls_threads = []
 
 dict_buttons = {}
 dict_sliders = {}
@@ -50,6 +52,7 @@ def main():
     print(dict_buttons, ls_root, ls_terminal)
 
     #run
+    loop.begin_loop(ls_threads, ls_root)
     ui.run(ls_root[0]) #THIS GOES AT THE END OF THE MAIN FUNCTION, ALL CODE AFTER IT WILL NOT RUN UNTILL THE WINDOWS HAVE EITHER BEEN CLOSED NY THE USER OR DESTROYRD VIA '<object name>.Destroy()'
     print("it seems the windows have been closed!")
 

@@ -5,7 +5,6 @@ import events as ev
 import tasks as tsk
 import alerts as als
 import misc_utils as msc
-import loop
 
 #-------------Create Main Windows------------
 def create_main_ui(name, geometry, resizeable, ls_root):

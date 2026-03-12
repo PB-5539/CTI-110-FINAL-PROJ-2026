@@ -3,6 +3,7 @@ import math as mt
 import random as rdm
 import time as tm
 import threading as th
+import tkinter as tk
 
 #----import internal modules
 import misc_utils as misc
@@ -12,6 +13,13 @@ import tasks as tsk
 import alerts as als
 import pseudo_terminal as pt
 
-def loop():
+def loop(ls_root):
     while True:
         print("yippee")
+        print(f"accesible dictionaries and lists within loop \n {ls_root} \n {None} \n")
+
+def begin_loop(ls_threads, ls_root):
+    thread = th.Thread(target=lambda: loop(ls_root),  daemon=True)
+    thread.start()
+    ls_threads.append(thread)
+    return thread
