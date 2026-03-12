@@ -19,7 +19,7 @@ import pseudo_terminal as pt
 #----initialize variables
 
 #create dictionaries and lists
-ls_root = [] #0=root 1=settings menu 2=start menu 3=psedo-terminal
+ls_root = [] #0=root 1=settings menu 2=main game window 3=psedo-terminal
 ls_terminal = [] #0=pseudo-terminal
 
 dict_buttons = {}
@@ -42,7 +42,7 @@ def main():
     ui.hide(ls_root[2])
     ui.hide(ls_root[1])
 
-    ui.add_button("play", ls_root[0], 20, 20, lambda: ui.play(), dict_buttons)
+    ui.add_button("play", ls_root[0], 20, 20, lambda: ui.play(ls_root), dict_buttons)
     ui.add_button("settings", ls_root[0], 20, 20, lambda: ui.settings(ls_root[1]), dict_buttons)
     ui.add_button("quit", ls_root[0], 20, 120, lambda: ui.quitgame(ls_root[0]), dict_buttons)
 

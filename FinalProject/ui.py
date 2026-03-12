@@ -5,6 +5,7 @@ import events as ev
 import tasks as tsk
 import alerts as als
 import misc_utils as msc
+import loop
 
 #-------------Create Main Windows------------
 def create_main_ui(name, geometry, resizeable, ls_root):
@@ -42,7 +43,9 @@ def add_button(name, parent, xpad, ypad, action, dict_buttons):
     return
 
 #------------Button actions------------
-def play():
+def play(ls_root):
+    ls_root[0].withdraw()
+    ls_root[2].deiconify()
     print("play!")
 
 def quitgame(ls_root):
