@@ -33,15 +33,21 @@ def main():
     ui.create_main_ui("main window", "300x400", True, ls_root)
     print(ls_root)
     print("game now loading...")
-    ui.add_button("play", ls_root[2], 20, 20, None, dict_buttons)
+    
     print(dict_buttons)
     
     pt.start_terminal(ls_terminal, ls_root)
     pt.startup(ls_terminal[0])
     pt.hide(ls_root[3])
-    ui.hide(ls_root[0])
+    ui.hide(ls_root[2])
     ui.hide(ls_root[1])
-    ui.add_button("settings", ls_root[2], 20, 20, None, dict_buttons)
+    
+    ui.add_button("play", ls_root[0], 20, 20, None, dict_buttons)
+    ui.add_button("settings", ls_root[0], 20, 20, None, dict_buttons)
+    ui.add_button("quit", ls_root[0], 20, 120, None, dict_buttons)
+
+    #debug printing
+    print(dict_buttons, ls_root, ls_terminal)
 
     #run
     ui.run(ls_root[0]) #THIS GOES AT THE END OF THE MAIN FUNCTION, ALL CODE AFTER IT WILL NOT RUN UNTILL THE WINDOWS HAVE EITHER BEEN CLOSED NY THE USER OR DESTROYRD VIA '<object name>.Destroy()'

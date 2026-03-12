@@ -31,12 +31,25 @@ def create_main_ui(name, geometry, resizeable, ls_root):
 
 
 #-------------Create Other Widgets------------
-def add_button(name, parent, xpad, ypad, acton, dict_buttons):
-    print(f"creating Button Widget named: {name} name with parent: {parent} pad x: {xpad} pad y: {ypad} and action: {acton}")
-    button = tk.Button(parent, text=name)
+def add_button(name, parent, xpad, ypad, action, dict_buttons):
+    print(f"creating Button Widget named: {name} name with parent: {parent} pad x: {xpad} pad y: {ypad} and action: {action}")
+
+    if action == "play":
+        button = tk.Button(parent, text=name, command=play())
+    elif action == "quit":
+        button = tk.Button(parent, text=name, command=quitgame())
+    else:
+        print(f"no function for button: {name} in parent: {parent}. attempted action input: {action}")
+        button = tk.Button(parent, text=name)
     button.pack(pady=ypad, padx=xpad)
     dict_buttons[name] = "button"
     return
+
+#------------Button actions------------
+def play():
+    print("play!")
+def quitgame():
+    print("buttoneventinterupt-quit")
 
 
 
