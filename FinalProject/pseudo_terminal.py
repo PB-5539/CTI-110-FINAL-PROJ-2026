@@ -1,6 +1,7 @@
 import math as mt
 import random as rdm
 import time as tm
+import ui
 import misc_utils as misc
 import events as ev
 import tasks as tsk
@@ -10,7 +11,7 @@ import tkinter as tk
 from tkinter import ttk
 
 def start_terminal(ls_terminal, ls_root):
-    ls_commands = ["hello","help","exit", "pseudo"] #pseudo will have a similar function to sudo with the pseudo-terminal because funnies lol
+    ls_commands = ["hello","help","exit", "nuke", "pseudo"] #pseudo will have a similar function to sudo with the pseudo-terminal because funnies lol
     def handle_command(command):
         command = command.strip().lower()
         if command == "hello":
@@ -18,7 +19,9 @@ def start_terminal(ls_terminal, ls_root):
         elif command == "help":
             return f"{ls_commands}"
         elif command == "exit":
-            terminal.destroy()
+            terminal.withdraw()
+        elif command == "nuke":
+            ui.quitgame(ls_root)
         else:
             return f"{command} : The term '{command}' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the spelling of the name, or if a path was included, verify that the path is correct and try again."
 
@@ -45,10 +48,17 @@ def start_terminal(ls_terminal, ls_root):
     entry.pack(pady=1, fill=tk.X, expand=True)
     entry.bind("<Return>", on_enter)
     entry.focus()
-    ls_terminal.insert(0, text_area)
-    ls_root.insert(3, terminal)
+    while len(ls_root) <= 3:
+        ls_root.append(None)
+
+    if len(ls_terminal) == 0:
+        ls_terminal.append(None)
+
+    ls_root[3] = terminal
+    ls_terminal[0] = text_area
 
 def startup(ls_terminal):
+        ls_terminal.config(state=tk.NORMAL)
         ls_terminal.insert(tk.END, f"initializing...\n")    
         ls_terminal.insert(tk.END, f"discovering disks...\n")   
         ls_terminal.insert(tk.END, f"reading bootloader...\n")  
@@ -59,9 +69,15 @@ def startup(ls_terminal):
         ls_terminal.insert(tk.END, f"Display Out [OK]\n")   
         ls_terminal.insert(tk.END, f"Load [SUCCESS]\n") 
         ls_terminal.insert(tk.END, f"---------------\n")    
-        ls_terminal.insert(tk.END, f'Welcome To EvrenOS, type "help" for a list of commands.\n')    
-def show(ls_root):
-    ls_root.deiconify()
+        ls_terminal.insert(tk.END, f'Welcome To EvrenOS, type "help" for a list of commands.\n')  
+        ls_terminal.config(state=tk.DISABLED)  
 
+def show(ls_root, ls_terminal):
+    if len(ls_root) > 3 and ls_root[3] and ls_root[3].winfo_exists():
+        ls_root[3].deiconify()
+    else:
+        start_terminal(ls_terminal, ls_root)
+        startup(ls_terminal[0])
+        
 def hide(ls_root):
     ls_root.withdraw()

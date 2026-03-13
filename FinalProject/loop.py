@@ -15,8 +15,7 @@ import pseudo_terminal as pt
 
 def loop(ls_root):
     while True:
-        print("yippee")
-        print(f"accesible dictionaries and lists within loop \n {ls_root} \n {None} \n")
+        print(ls_root)
 
 def begin_loop(ls_threads, ls_root):
     thread = th.Thread(target=lambda: loop(ls_root),  daemon=True)
