@@ -49,7 +49,7 @@ def main():
     ui.add_button("quit", ls_root[0], 20, 120, lambda: ui.quitgame(ls_root[0]), dict_buttons)
 
     #debug printing
-    print(dict_buttons, ls_root, ls_terminal)
+    print(f"{dict_buttons} \n{ls_root} \n{ls_terminal}\n")
 
     #run
     loop.begin_loop(ls_threads, ls_root)
