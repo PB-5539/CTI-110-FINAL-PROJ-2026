@@ -33,13 +33,21 @@ def create_main_ui(name, geometry, resizeable, ls_root):
 #-------------Create Other Widgets------------
 def add_button(name, parent, xpad, ypad, action, dict_buttons):
     print(f"creating Button Widget named: {name} name with parent: {parent} pad x: {xpad} pad y: {ypad} and action: {action}")
-
-
     button = tk.Button(parent, text=name, command=action)
     print(f"no function for button: {name} in parent: {parent}. attempted action input: {action}")
     button.pack(pady=ypad, padx=xpad)
-    dict_buttons[name] = "button"
+    dict_buttons[name] = button
     return
+
+def add_label(name, parent, xpad, ypad, text, dict_labels):
+    print(f"creating Button Widget named: {name} name with parent: {parent} pad x: {xpad} pad y: {ypad} and text: {text}")
+    label = tk.Label(parent, text=text,)
+    print(f"no function for button: {name} in parent: {parent}. attempted text input: {text}")
+    label.pack(pady=ypad, padx=xpad)
+    dict_labels[name] = label
+    return
+
+
 
 #------------Button actions------------
 def play(ls_root):

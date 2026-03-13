@@ -47,6 +47,8 @@ def main():
     ui.add_button("play", ls_root[0], 20, 20, lambda: ui.play(ls_root), dict_buttons)
     ui.add_button("settings", ls_root[0], 20, 20, lambda: ui.settings(ls_root[1]), dict_buttons)
     ui.add_button("quit", ls_root[0], 20, 120, lambda: ui.quitgame(ls_root[0]), dict_buttons)
+    
+    ui.add_label("gamewindowlabel", ls_root[2], 20, 20, f"game window label, debig info: {dict_labels} {dict_buttons} {ls_root} {ls_threads} {ls_terminal}", dict_labels)
 
     #debug printing
     print(f"{dict_buttons} \n{ls_root} \n{ls_terminal}\n")
