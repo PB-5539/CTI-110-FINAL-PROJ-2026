@@ -34,19 +34,29 @@ def create_main_ui(name, geometry, resizeable, ls_root):
 def add_button(name, parent, xpad, ypad, action, dict_buttons):
     print(f"creating Button Widget named: {name} name with parent: {parent} pad x: {xpad} pad y: {ypad} and action: {action}")
     button = tk.Button(parent, text=name, command=action)
-    print(f"no function for button: {name} in parent: {parent}. attempted action input: {action}")
     button.pack(pady=ypad, padx=xpad)
     dict_buttons[name] = button
     return
 
-def add_label(name, parent, xpad, ypad, text, dict_labels):
-    print(f"creating Button Widget named: {name} name with parent: {parent} pad x: {xpad} pad y: {ypad} and text: {text}")
+def add_label(name, parent, xpad, ypad, text, dict_labels, LorR, TorB):
+    print(f"creating label Widget named: {name} name with parent: {parent} pad x: {xpad} pad y: {ypad} and text: {text}")
+    if LorR.lower() == "left":
+        print("LEFT")
+    elif LorR.lower() == "Right":
+        print("RIGHT")
+    else:
+        print("invalid")
     label = tk.Label(parent, text=text,)
-    print(f"no function for button: {name} in parent: {parent}. attempted text input: {text}")
     label.pack(pady=ypad, padx=xpad)
     dict_labels[name] = label
     return
 
+def add_frame(name, parent, xpad, ypad, dict_frames):
+    print(f"creating frame Widget named: {name} name with parent: {parent} pad x: {xpad} pad y: {ypad}")
+    frame = tk.Frame(parent)
+    frame.pack(pady=ypad, padx=xpad)
+    dict_frames[name] = frame
+    return
 
 
 #------------Button actions------------
