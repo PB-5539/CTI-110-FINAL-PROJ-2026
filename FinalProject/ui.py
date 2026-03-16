@@ -45,7 +45,7 @@ def add_label(name, parent, xpad, ypad, text, dict_labels, LorR, TorB):
     if LorR.lower() == "left":
         print("LEFT")
         label.pack(pady=ypad, padx=xpad, side=tk.LEFT)
-    elif LorR.lower() == "Right":
+    elif LorR.lower() == "right":
         print("RIGHT")
         label.pack(pady=ypad, padx=xpad, side=tk.RIGHT)
     else:
@@ -60,7 +60,7 @@ def add_frame(name, parent, xpad, ypad, dict_frames, LorR, TorB, backg):
     if LorR.lower() == "left":
         print("LEFT")
         frame.pack(pady=ypad, padx=xpad, side=tk.LEFT)
-    elif LorR.lower() == "Right":
+    elif LorR.lower() == "right":
         print("RIGHT")
         frame.pack(pady=ypad, padx=xpad, side=tk.RIGHT)
     else:

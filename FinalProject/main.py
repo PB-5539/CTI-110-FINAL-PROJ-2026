@@ -21,7 +21,7 @@ import loop
 #mutable variables are stored within a dictionary for a more easy way to transfer between threads using dict_vars["variable name"] to get the variable rather than passing through all the variables through the loop.begin_loop(...) function
 dict_vars = {}
 #create dictionaries and lists
-ls_root = [None, None, None] #0=root 1=settings menu 2=main game window 3=psedo-terminal
+ls_root = [] #0=root 1=settings menu 2=main game window 3=psedo-terminal
 ls_terminal = [] #0=pseudo-terminal
 ls_threads = [] #0=game logic loop thread
 
@@ -51,8 +51,8 @@ def main():
 
     ui.add_label("gamewindowlabel", ls_root[2], 20, 20, f"------------------", dict_labels, "None", "None")
     ui.add_button("terminal", ls_root[2], 20, 20, lambda: pt.show(ls_root, ls_terminal), dict_buttons)
-    ui.add_frame("sidebar", ls_root[2], 20, 20, dict_frames, "Right", "None", "red")
-    ui.add_label("sidebar title", dict_frames["sidebar"], 20, 20, "sidebar!",  dict_labels, "Right", "None")
+    ui.add_frame("sidebar", ls_root[2], 20, 20, dict_frames, "left", "None", "red")
+    ui.add_label("sidebar title", dict_frames["sidebar"], 20, 20, "sidebar!",  dict_labels, "none", "None")
     #TO DO: 
     #fix the left/right alignment logic for the modular tkinter ui system
     #add top/botton alignment logic
@@ -60,9 +60,8 @@ def main():
 
     
     #run
-    loop.begin_loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars)
+    #loop.begin_loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars)
     ui.run(ls_root[0]) #THIS GOES AT THE END OF THE MAIN FUNCTION, ALL CODE AFTER IT WILL NOT RUN UNTILL THE WINDOWS HAVE EITHER BEEN CLOSED NY THE USER OR DESTROYRD VIA '<object name>.Destroy()'
-    print("it seems the windows have been closed!")
 
 #run game
 main()
