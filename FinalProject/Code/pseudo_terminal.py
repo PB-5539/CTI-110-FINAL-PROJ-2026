@@ -22,6 +22,7 @@ def start_terminal(ls_terminal, ls_root):
             terminal.withdraw()
         elif command == "nuke":
             ui.quitgame(ls_root[0])
+            return command
         else:
             return f"{command} : The term '{command}' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the spelling of the name, or if a path was included, verify that the path is correct and try again."
 
@@ -32,10 +33,11 @@ def start_terminal(ls_terminal, ls_root):
         entry.delete(0, tk.END)
         
         response = handle_command(cmd)
-        if response:
+        if response and cmd != "nuke":
             text_area.insert(tk.END, f"{response}\n")
-        text_area.see(tk.END)
-        text_area.config(state=tk.DISABLED)
+        if cmd != "nuke":
+            text_area.see(tk.END)
+            text_area.config(state=tk.DISABLED)
 
     terminal = tk.Toplevel()
     terminal.title("Terminal")

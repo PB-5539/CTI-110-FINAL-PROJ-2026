@@ -76,6 +76,7 @@ def play(ls_root):
     print("play!")
 
 def quitgame(ls_root):
+    ls_root.deiconify()
     ls_root.destroy()
     print("buttoneventinterupt-quit")
 
