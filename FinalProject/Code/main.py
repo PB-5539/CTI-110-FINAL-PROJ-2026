@@ -18,9 +18,10 @@ import pseudo_terminal as pt
 import loop
 
 #----initialize variables
-
+#mutable variables are stored within a dictionary for a more easy way to transfer between threads using dict_vars["variable name"] to get the variable rather than passing through all the variables through the loop.begin_loop(...) function
+dict_vars = {}
 #create dictionaries and lists
-ls_root = [None, None, None] #0=root 1=settings menu 2=main game window 3=psedo-terminal
+ls_root = [] #0=root 1=settings menu 2=main game window 3=psedo-terminal
 ls_terminal = [] #0=pseudo-terminal
 ls_threads = [] #0=game logic loop thread
 
@@ -48,20 +49,19 @@ def main():
     ui.add_button("settings", ls_root[0], 20, 20, lambda: ui.settings(ls_root[1]), dict_buttons)
     ui.add_button("quit", ls_root[0], 20, 120, lambda: ui.quitgame(ls_root[0]), dict_buttons)
 
-    ui.add_label("gamewindowlabel", ls_root[2], 20, 20, f"------------------")
+    ui.add_label("gamewindowlabel", ls_root[2], 20, 20, f"------------------", dict_labels, "None", "None")
     ui.add_button("terminal", ls_root[2], 20, 20, lambda: pt.show(ls_root, ls_terminal), dict_buttons)
-    ui.add_frame("sidebar", ls_root[2], 20, 20, dict_frames)
+    ui.add_frame("sidebar", ls_root[2], 20, 20, dict_frames, "left", "None", "red")
+    ui.add_label("sidebar title", dict_frames["sidebar"], 20, 20, "sidebar!",  dict_labels, "none", "None")
+    #TO DO: 
+    #fix the left/right alignment logic for the modular tkinter ui system
+    #add top/botton alignment logic
 
 
-
-
-    #debug printing
-    print(f"{dict_buttons} \n{ls_root} \n{ls_terminal}\n")
-
+    
     #run
-    loop.begin_loop(ls_threads, ls_root)
+    #loop.begin_loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars)
     ui.run(ls_root[0]) #THIS GOES AT THE END OF THE MAIN FUNCTION, ALL CODE AFTER IT WILL NOT RUN UNTILL THE WINDOWS HAVE EITHER BEEN CLOSED NY THE USER OR DESTROYRD VIA '<object name>.Destroy()'
-    print("it seems the windows have been closed!")
 
 #run game
 main()

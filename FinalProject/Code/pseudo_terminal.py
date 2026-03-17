@@ -17,11 +17,11 @@ def start_terminal(ls_terminal, ls_root):
         if command == "hello":
             return "Hi!"
         elif command == "help":
-            return f"{ls_commands}"
+            return f"{ls_commands}\n"
         elif command == "exit":
             terminal.withdraw()
         elif command == "nuke":
-            ui.quitgame(ls_root)
+            ui.quitgame(ls_root[0])
         else:
             return f"{command} : The term '{command}' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the spelling of the name, or if a path was included, verify that the path is correct and try again."
 

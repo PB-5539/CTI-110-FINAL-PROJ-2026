@@ -31,6 +31,7 @@ def create_main_ui(name, geometry, resizeable, ls_root):
 
 
 #-------------Create Other Widgets------------
+
 def add_button(name, parent, xpad, ypad, action, dict_buttons):
     print(f"creating Button Widget named: {name} name with parent: {parent} pad x: {xpad} pad y: {ypad} and action: {action}")
     button = tk.Button(parent, text=name, command=action)
@@ -40,24 +41,33 @@ def add_button(name, parent, xpad, ypad, action, dict_buttons):
 
 def add_label(name, parent, xpad, ypad, text, dict_labels, LorR, TorB):
     print(f"creating label Widget named: {name} name with parent: {parent} pad x: {xpad} pad y: {ypad} and text: {text}")
+    label = tk.Label(parent, text=text,)
     if LorR.lower() == "left":
         print("LEFT")
-    elif LorR.lower() == "Right":
+        label.pack(pady=ypad, padx=xpad, side=tk.LEFT)
+    elif LorR.lower() == "right":
         print("RIGHT")
+        label.pack(pady=ypad, padx=xpad, side=tk.RIGHT)
     else:
-        print("invalid")
-    label = tk.Label(parent, text=text,)
-    label.pack(pady=ypad, padx=xpad)
+        print("none")
+        label.pack(pady=ypad, padx=xpad,)
     dict_labels[name] = label
     return
 
-def add_frame(name, parent, xpad, ypad, dict_frames):
+def add_frame(name, parent, xpad, ypad, dict_frames, LorR, TorB, backg):
     print(f"creating frame Widget named: {name} name with parent: {parent} pad x: {xpad} pad y: {ypad}")
-    frame = tk.Frame(parent)
-    frame.pack(pady=ypad, padx=xpad)
+    frame = tk.Frame(parent, bg=backg)
+    if LorR.lower() == "left":
+        print("LEFT")
+        frame.pack(pady=ypad, padx=xpad, side=tk.LEFT)
+    elif LorR.lower() == "right":
+        print("RIGHT")
+        frame.pack(pady=ypad, padx=xpad, side=tk.RIGHT)
+    else:
+        print("none")
+        frame.pack(pady=ypad, padx=xpad,)
     dict_frames[name] = frame
     return
-
 
 #------------Button actions------------
 def play(ls_root):
