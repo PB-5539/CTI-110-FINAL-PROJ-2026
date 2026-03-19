@@ -32,6 +32,7 @@ def loop(ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_lab
         #check if the main game window (not the root window) exists, if not then call the function ui.quitgame()
         #format tm.time() to an actual clock dictionary
 
+        dict_labels["sidebar title"].config(text=f"{tm.ctime()}")
 
 
 
