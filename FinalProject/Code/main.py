@@ -14,12 +14,26 @@ import ui
 import events as ev
 import tasks as tsk
 import alerts as als
+import audio_utils as au
 import pseudo_terminal as pt
 import loop
 
 #----initialize variables
 #mutable variables are stored within a dictionary for a more easy way to transfer between threads using dict_vars["variable name"] to get the variable rather than passing through all the variables through the loop.begin_loop(...) function
-dict_vars = {}
+#days = 0
+#current_cycle = 0
+#structural_integrity = 1000
+#life_support_system_integrity = 1000
+#temperature_C = 0
+#temperature_F = 32
+dict_vars = {"days":0, "current_cycle":0, "structural_integrity":0, "life_support_system_integrity":0, "temperature_C":0, "temperature_F":0}
+
+dict_vars["days"] = 0
+dict_vars["current_cycle"] = 0
+dict_vars["structural_integrity"] = 1000
+dict_vars["life_support_system_integrity"] = 1000
+dict_vars["temperature_C"] = 0
+dict_vars["temperature_F"] = 32
 #create dictionaries and lists
 ls_root = [] #0=root 1=settings menu 2=main game window 3=psedo-terminal
 ls_terminal = [] #0=pseudo-terminal
@@ -53,14 +67,15 @@ def main():
     ui.add_button("terminal", ls_root[2], 20, 20, lambda: pt.show(ls_root, ls_terminal), dict_buttons)
     ui.add_frame("sidebar", ls_root[2], 20, 20, dict_frames, "left", "None", "red")
     ui.add_label("sidebar title", dict_frames["sidebar"], 20, 20, "sidebar!",  dict_labels, "none", "None")
-    #TO DO: 
-    #fix the left/right alignment logic for the modular tkinter ui system
-    #add top/botton alignment logic
+    #au.play_audio("MainMenu.wav")
 
+    #TO DO: 
+    #add top/botton alignment logic
+    #make an audio thread
 
     
     #run
-    #loop.begin_loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars)
+    loop.begin_loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars)
     ui.run(ls_root[0]) #THIS GOES AT THE END OF THE MAIN FUNCTION, ALL CODE AFTER IT WILL NOT RUN UNTILL THE WINDOWS HAVE EITHER BEEN CLOSED NY THE USER OR DESTROYRD VIA '<object name>.Destroy()'
 
 #run game
