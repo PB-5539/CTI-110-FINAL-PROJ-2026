@@ -456,3 +456,24 @@ You should see FFmpeg’s version info.
 If you want, I can also give a one-liner PowerShell command that does the same thing without creating a batch file, perfect if you just want to paste it into PowerShell and go.
 
 Do you want me to do that too?
+
+
+can winsound get the length or duration of a WAV file?
+
+
+No, the winsound module documentation does not include functionality to get the length or duration of a WAV file. It provides basic functions for playing sounds and beeping the PC speaker, but not for reading file metadata. 
+Python documentation
+Python documentation
+ +3
+To get the duration of a WAV file in Python, you can use other libraries: 
+Standard Library wave module: The built-in wave module can read the file's properties. You can calculate the duration by dividing the number of frames by the frame rate.
+python
+import wave
+import contextlib
+
+fname = 'your_file.wav'
+with contextlib.closing(wave.open(fname,'r')) as f:
+    frames = f.getnframes()
+    rate = f.getframerate()
+    duration = frames / float(rate)
+    print(f"Duration: {duration:.2f} seconds")

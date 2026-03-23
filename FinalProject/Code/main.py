@@ -21,7 +21,7 @@ import loop
 
 
 #----Main function
-def main(display_scale):
+def main():
     #----initialize variables
     #mutable variables are stored within a dictionary for a more easy way to transfer between threads using dict_vars["variable name"] to get the variable rather than passing through all the variables through the loop.begin_loop(...) function
     #days = 0
@@ -48,7 +48,7 @@ def main(display_scale):
     dict_labels = {}
     dict_entries = {}
     dict_frames = {}
-    ui.create_main_ui("main window", display_scale, True, ls_root)
+    ui.create_main_ui("main window", "1920x1080", True, ls_root)
     print(ls_root)
     print("game now loading...")
     
@@ -60,13 +60,14 @@ def main(display_scale):
     ui.hide(ls_root[2])
     ui.hide(ls_root[1])
 
-    ui.add_button("play", ls_root[0], 20, 20, lambda: ui.play(ls_root), dict_buttons)
+    ui.add_button("play", ls_root[0], 20, 20, lambda: ui.play(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars), dict_buttons)
     ui.add_button("settings", ls_root[0], 20, 20, lambda: ui.settings(ls_root[1]), dict_buttons)
     ui.add_button("quit", ls_root[0], 20, 120, lambda: ui.quitgame(ls_root[0]), dict_buttons)
 
     ui.add_frame("sidebar", ls_root[2], 1, 1, dict_frames, "left", "None", "grey", "y")
     ui.add_label("sidebar title", dict_frames["sidebar"], 20, 20, "sidebar!",  dict_labels, "none", "None", "light grey")
-    ui.add_label("Day counter", dict_frames["sidebar"], 20, 20, "", dict_labels, "none", "none", "light grey" )
+    ui.add_label("day counter", dict_frames["sidebar"], 20, 20, "", dict_labels, "none", "none", "light grey" )
+    ui.add_button("Guide", dict_frames["sidebar"], 20, 120, lambda: ui.guidebook(), dict_buttons)
 
     ui.add_frame("main frame", ls_root[2], 1, 1, dict_frames, "left", "none", "grey", "both")
     ui.add_label("game window label", dict_frames["main frame"], 20, 20, f"------------------", dict_labels, "None", "None", "grey")
@@ -82,30 +83,9 @@ def main(display_scale):
     #add a day counter and cycle tracker (time untill next cycle/day and how many cycles have passed)
     
     #run
-    loop.begin_day_loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars) #manages the day cycle using the time and random modules and various loops and conditional branches
-    loop.begin_loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars)#manages most behaviors, most of which are conditional if or elif or else statements, maybe some switch cases and various loops
+    #loop.begin_day_loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars) #manages the day cycle using the time and random modules and various loops and conditional branches
+    #loop.begin_loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars)#manages most behaviors, most of which are conditional if or elif or else statements, maybe some switch cases and various loops
+    ls_root[2].protocol( "WM_DELETE_WINDOW", lambda: ui.quitgame(ls_root[0]))
     ui.run(ls_root[0]) #THIS GOES AT THE END OF THE MAIN FUNCTION, ALL CODE AFTER IT WILL NOT RUN UNTILL THE WINDOWS HAVE EITHER BEEN CLOSED NY THE USER OR DESTROYRD VIA '<object name>.Destroy()'
-
-
-def prompt(display_scale, scale):
-    #prompt for display scale
-    prompt = tk.Tk()
-    prompt.geometry("400x300")
-    label = tk.Label(prompt, text="Please enter your display scale (default: 1920x1080) fomat: WIDTHxHEIGHT")
-    label.pack()
-    entry = tk.Entry(prompt)
-    entry.pack()
-    enter = tk.Button(prompt, text="Submit", command=lambda: entry_text(scale, prompt, entry))
-    enter.pack(pady=10)
-    prompt.mainloop()
-    display_scale = scale
-    return display_scale
-def entry_text(scale , prompt, entryobj):
-        entryval = entryobj.get()
-        print(entryval, scale)
-        scale = entryval
-        prompt.destroy()
-
-
 #run game
 main()

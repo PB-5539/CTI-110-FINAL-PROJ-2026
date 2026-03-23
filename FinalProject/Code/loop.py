@@ -7,6 +7,7 @@ import tkinter as tk
 
 #----import internal modules
 import misc_utils as misc
+import audio_utils as au
 import ui
 import events as ev
 import tasks as tsk
@@ -27,13 +28,16 @@ def loop(ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_lab
         temperature_F = dict_vars["temperature_F"]
 
         print(f"{days}\n{current_cycle}\n{structural_integrity}\n{life_support_system_integrity}\n{temperature_C}\n{temperature_F}\n")
-
+        print(misc.get_duration("Theme1.wav"))
         #todo:
         #check if the main game window (not the root window) exists, if not then call the function ui.quitgame()
         #format tm.time() to an actual clock dictionary
-
+    
+        
         dict_labels["sidebar title"].config(text=f"{tm.ctime()}")
 
+    
+        
 
 
 
@@ -56,7 +60,8 @@ def day_loop(ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict
     #stuff
     while True:
         dict_labels["day counter"].config(text=str(dict_vars["current cycle"]))
-        tm.sleep(1000) #have an actual lengthe or sumthin later
+        au.play_audio("Theme1.wav")
+        tm.sleep(misc.get_duration("Theme1.wav"))
         print("counted a day")
     #MAIN DAY CYCLE TIMING LOGIC ----------/\
     

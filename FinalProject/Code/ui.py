@@ -5,7 +5,7 @@ import events as ev
 import tasks as tsk
 import alerts as als
 import misc_utils as msc
-
+import loop
 #-------------Create Main Windows------------
 def create_main_ui(name, geometry, resizeable, ls_root):
     print(f"creating Main Ui element named: {name} with geometry: {geometry}")
@@ -80,9 +80,12 @@ def add_frame(name, parent, xpad, ypad, dict_frames, LorR, TorB, backg, fill):
     return
 
 #------------Button actions------------
-def play(ls_root):
+def play(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars):
     ls_root[0].withdraw()
     ls_root[2].deiconify()
+    loop.begin_day_loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars) #manages the day cycle using the time and random modules and various loops and conditional branches
+    loop.begin_loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars)#manages most behaviors, most of which are conditional if or elif or else statements, maybe some switch cases and various loops
+
     print("play!")
 
 def quitgame(ls_root):
@@ -100,6 +103,12 @@ def settings(ls_root):
         
     print("open settings!")
 
+def guidebook():
+        guide = tk.Toplevel()
+        guide.title("Guide Book")
+        guide.geometry("300x400")
+        g_text = tk.Text(text="lorem ipsum", bg="light brown")
+        g_text.pack(pady=20, padx=40,fill=tk.BOTH,expand=True)
 
 def run(root):
     print("it ran!", root)
