@@ -18,7 +18,7 @@ def loop(ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_lab
         print(ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars)
         #Main Game Logic---------------------\/
         print("game logic")
-        #update local variables
+        #read all variables and write to local variables
         days = dict_vars["days"]
         current_cycle = dict_vars["current_cycle"]
         structural_integrity = dict_vars["structural_integrity"]
@@ -38,9 +38,7 @@ def loop(ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_lab
 
 
 
-        #write to variable dictionary for reading in the main thread
-        dict_vars["days"] = days
-        dict_vars["current_cycle"] = current_cycle
+        #write mutable variable dictionary for reading in the main thread
         dict_vars["structural_integrity"] = structural_integrity
         dict_vars["life_support_system_integrity"] = life_support_system_integrity
         dict_vars["temperature_C"] = temperature_C
@@ -48,6 +46,22 @@ def loop(ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_lab
         #Main Game logic---------------------/\
 def begin_loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars):
     thread = th.Thread(target=loop, args=(ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars),  daemon=True)
+    thread.start()
+    ls_threads.append(thread)
+    return thread
+def day_loop(ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars):
+    print("day loop ran", ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars)
+    
+    #MAIN DAY CYCLE TIMING LOGIC ----------\/
+    #stuff
+    while True:
+        dict_labels["day counter"].config(text=str(dict_vars["current cycle"]))
+        tm.sleep(1000) #have an actual lengthe or sumthin later
+        print("counted a day")
+    #MAIN DAY CYCLE TIMING LOGIC ----------/\
+    
+def begin_day_loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars):
+    thread = th.Thread(target=day_loop, args=(ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars),  daemon=True)
     thread.start()
     ls_threads.append(thread)
     return thread

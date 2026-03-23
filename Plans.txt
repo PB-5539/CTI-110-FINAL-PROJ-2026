@@ -22,8 +22,8 @@ coral glass: a parasitic growth that brutally damages low power equipment (most 
 
 cat chaos: cleaning oxygen filters becomes slower and short circuits are more common
 
-hacked: hinted at the cycle before in the terminal by an ominous error message "Ip: 20.26.43.2 ACCESS DENIED" hinting at a hack. this event is very rare, however it completly disables the use of the terminal as the built-in AI, Evren, is actively fighting the hacker which can take between 1-3 cycles. this makes diagnosing problems more difficult and you wont get any alerts except for critical system alerts.
+hacked: hinted at the cycle before in the terminal by an ominous error message "Ip: 20.26.43.2 ACCESS DENIED" hinting at a hack. this event is very rare, however it completly disables the use of the "ask" command in the terminal as the built-in AI, Evren, is actively fighting the hacker which can take between 1-3 cycles. this makes diagnosing problems more difficult and you wont get any alerts except for critical system alerts.
 
 radio interferance: mostly background, background music stops and every once in a while you'll hear radio static. the only gameplay effect this event has is that sensor problems are more common.
 
-end goal: the goal is to keep the ship running at full capacity for as long as possible, once it has been a random amount of cycles from 20-50 cycles (configurable in settings to be any range) the ship will land at a station and the station owner who lost most contact with the ship reclaims their ship and you're promoted to second in command of the ship after surviving on your own for so long. then an overview is shown and thats the end of the game!
+end goal: the goal is to keep the ship running at full capacity for as long as possible, once it has been a random amount of cycles from 30-55 cycles (configurable in settings to be any range) the ship will land at a station and the station owner who lost most contact with the ship reclaims their ship and you're promoted to second in command of the ship after surviving on your own for so long. then an overview is shown and thats the end of the game!

@@ -39,9 +39,9 @@ def add_button(name, parent, xpad, ypad, action, dict_buttons):
     dict_buttons[name] = button
     return
 
-def add_label(name, parent, xpad, ypad, text, dict_labels, LorR, TorB):
+def add_label(name, parent, xpad, ypad, text, dict_labels, LorR, TorB, backg):
     print(f"creating label Widget named: {name} name with parent: {parent} pad x: {xpad} pad y: {ypad} and text: {text}")
-    label = tk.Label(parent, text=text,)
+    label = tk.Label(parent, text=text, bg=backg)
     if LorR.lower() == "left":
         print("LEFT")
         label.pack(pady=ypad, padx=xpad, side=tk.LEFT)
@@ -54,7 +54,7 @@ def add_label(name, parent, xpad, ypad, text, dict_labels, LorR, TorB):
     dict_labels[name] = label
     return
 
-def add_frame(name, parent, xpad, ypad, dict_frames, LorR, TorB, backg):
+def add_frame(name, parent, xpad, ypad, dict_frames, LorR, TorB, backg, fill):
     print(f"creating frame Widget named: {name} name with parent: {parent} pad x: {xpad} pad y: {ypad}")
     frame = tk.Frame(parent, bg=backg)
     if LorR.lower() == "left":
@@ -65,7 +65,17 @@ def add_frame(name, parent, xpad, ypad, dict_frames, LorR, TorB, backg):
         frame.pack(pady=ypad, padx=xpad, side=tk.RIGHT)
     else:
         print("none")
-        frame.pack(pady=ypad, padx=xpad,)
+    if fill.lower() == "x":
+        print("fill X")
+        frame.pack(pady=ypad, padx=xpad,fill=tk.X,expand=True)
+    elif fill.lower() == "y":
+        print("fill Y")
+        frame.pack(pady=ypad, padx=xpad,fill=tk.Y,expand=True)
+    elif fill.lower() == "both":
+        print ("fill both")
+        frame.pack(pady=ypad, padx=xpad,fill=tk.BOTH,expand=True)
+    else:
+        frame.pack(pady=ypad, padx=xpad)
     dict_frames[name] = frame
     return
 
