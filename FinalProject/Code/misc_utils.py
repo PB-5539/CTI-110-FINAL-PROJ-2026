@@ -4,6 +4,7 @@ import time as tm
 import wave
 import contextlib
 import os
+
 def get_duration(filename):
     fname = r'finalproject/audio/wav/'+filename
     with contextlib.closing(wave.open(fname,'r')) as f:

@@ -6,8 +6,9 @@ import tasks as tsk
 import alerts as als
 import misc_utils as msc
 import loop
+import pseudo_terminal as pt
 #-------------Create Main Windows------------
-def create_main_ui(name, geometry, resizeable, ls_root):
+def create_main_ui(name, geometry, resizeable, ls_root, ls_terminal):
     print(f"creating Main Ui element named: {name} with geometry: {geometry}")
     root = tk.Tk()
     root.title(name)
@@ -15,20 +16,28 @@ def create_main_ui(name, geometry, resizeable, ls_root):
     ls_root.insert(0, root)
 
     print(f"creating sub uis with default geometry {geometry}")
-#create windows
+    
     start_menu = tk.Toplevel()
     start_menu.title("A Good Enough Cycle")
     start_menu.geometry(geometry)
     
     settings = tk.Toplevel()
     settings.title("Settings")
-    settings.geometry(geometry)
+    settings.geometry("300x400")
+
+    guide = tk.Toplevel()
+    guide.title("Guide Book")
+    guide.geometry("300x400")
+    g_text = tk.Text(guide)
+    g_text.pack(pady=20, padx=40,fill=tk.BOTH,expand=True)
+
     
     ls_root.insert(1, settings)
     ls_root.insert(2, start_menu)
+    pt.start_terminal(ls_terminal, ls_root)
+    pt.startup(ls_terminal[0])
+    ls_root.insert(4,guide)
     return root
-
-
 
 #-------------Create Other Widgets------------
 
@@ -98,17 +107,24 @@ def settings(ls_root):
         ls_root.deiconify()
     else:
         settings = tk.Toplevel()
-    settings.title("Settings")
-    settings.geometry("300x400")
-        
+        settings.title("Settings")
+        settings.geometry("300x400")
+        ls_root.insert(1 ,settings )
     print("open settings!")
 
-def guidebook():
+def guidebook(ls_root):
+    if ls_root[4].winfo_exists():
+        ls_root[4].deiconify()
+        print("guide exists")
+    else:
         guide = tk.Toplevel()
         guide.title("Guide Book")
         guide.geometry("300x400")
-        g_text = tk.Text(text="lorem ipsum", bg="light brown")
+        g_text = tk.Text(guide)
         g_text.pack(pady=20, padx=40,fill=tk.BOTH,expand=True)
+        ls_root.insert(4 , guide)
+        print("new guidebook created")
+        
 
 def run(root):
     print("it ran!", root)

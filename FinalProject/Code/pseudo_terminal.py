@@ -14,13 +14,13 @@ def start_terminal(ls_terminal, ls_root):
     ls_commands = ["hello","help","exit", "nuke", "pseudo"] #pseudo will have a similar function to sudo with the pseudo-terminal because funnies lol
     def handle_command(command):
         command = command.strip().lower()
-        if command == "hello":
+        if command == ls_commands[0]:
             return "Hi!"
-        elif command == "help":
+        elif command == ls_commands[1]:
             return f"{ls_commands}\n"
-        elif command == "exit":
+        elif command == ls_commands[2]:
             terminal.withdraw()
-        elif command == "nuke":
+        elif command == ls_commands[3]:
             ui.quitgame(ls_root[0])
             return command
         else:

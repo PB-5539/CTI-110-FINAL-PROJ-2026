@@ -24,14 +24,7 @@ import loop
 def main():
     #----initialize variables
     #mutable variables are stored within a dictionary for a more easy way to transfer between threads using dict_vars["variable name"] to get the variable rather than passing through all the variables through the loop.begin_loop(...) function
-    #days = 0
-    #current_cycle = 0
-    #structural_integrity = 1000
-    #life_support_system_integrity = 1000
-    #temperature_C = 0
-    #temperature_F = 32
     dict_vars = {"days":0, "current_cycle":0, "structural_integrity":0, "life_support_system_integrity":0, "temperature_C":0, "temperature_F":0}
-
     dict_vars["days"] = rdm.randrange(30,55,1)
     dict_vars["current_cycle"] = 0
     dict_vars["structural_integrity"] = 1000
@@ -48,14 +41,14 @@ def main():
     dict_labels = {}
     dict_entries = {}
     dict_frames = {}
-    ui.create_main_ui("main window", "1920x1080", True, ls_root)
+    ui.create_main_ui("main window", "1920x1080", True, ls_root, ls_terminal)
     print(ls_root)
     print("game now loading...")
     
     print(dict_buttons)
     
-    pt.start_terminal(ls_terminal, ls_root)
-    pt.startup(ls_terminal[0])
+    
+    ui.hide(ls_root[4])
     pt.hide(ls_root[3])
     ui.hide(ls_root[2])
     ui.hide(ls_root[1])
@@ -67,7 +60,7 @@ def main():
     ui.add_frame("sidebar", ls_root[2], 1, 1, dict_frames, "left", "None", "grey", "y")
     ui.add_label("sidebar title", dict_frames["sidebar"], 20, 20, "sidebar!",  dict_labels, "none", "None", "light grey")
     ui.add_label("day counter", dict_frames["sidebar"], 20, 20, "", dict_labels, "none", "none", "light grey" )
-    ui.add_button("Guide", dict_frames["sidebar"], 20, 120, lambda: ui.guidebook(), dict_buttons)
+    ui.add_button("Guide", dict_frames["sidebar"], 20, 120, lambda: ui.guidebook(ls_root), dict_buttons)
 
     ui.add_frame("main frame", ls_root[2], 1, 1, dict_frames, "left", "none", "grey", "both")
     ui.add_label("game window label", dict_frames["main frame"], 20, 20, f"------------------", dict_labels, "None", "None", "grey")
@@ -83,9 +76,7 @@ def main():
     #add a day counter and cycle tracker (time untill next cycle/day and how many cycles have passed)
     
     #run
-    #loop.begin_day_loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars) #manages the day cycle using the time and random modules and various loops and conditional branches
-    #loop.begin_loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars)#manages most behaviors, most of which are conditional if or elif or else statements, maybe some switch cases and various loops
     ls_root[2].protocol( "WM_DELETE_WINDOW", lambda: ui.quitgame(ls_root[0]))
-    ui.run(ls_root[0]) #THIS GOES AT THE END OF THE MAIN FUNCTION, ALL CODE AFTER IT WILL NOT RUN UNTILL THE WINDOWS HAVE EITHER BEEN CLOSED NY THE USER OR DESTROYRD VIA '<object name>.Destroy()'
+    ui.run(ls_root[0]) #THIS GOES AT THE END OF THE MAIN FUNCTION, ALL CODE AFTER IT WILL NOT RUN UNTILL THE WINDOWS HAVE EITHER BEEN CLOSED BY THE USER OR DESTROYRD VIA '<object name>.Destroy()'
 #run game
 main()
