@@ -477,3 +477,286 @@ with contextlib.closing(wave.open(fname,'r')) as f:
     rate = f.getframerate()
     duration = frames / float(rate)
     print(f"Duration: {duration:.2f} seconds")
+
+context: i was trying to make a window display over another window but be able to interact with the back window so i did some googling and decided to make it with draggable frames)
+
+can i make draggable window-like frames with tkinter?
+
+Oh yeah 😄 frames can absolutely be draggable—you just have to manually handle the mouse events.
+
+Tkinter doesn’t give you this out of the box, but it’s actually super simple.
+
+🔥 Basic draggable frame
+import tkinter as tk
+
+root = tk.Tk()
+root.geometry("500x400")
+
+frame = tk.Frame(root, bg="orange", bd=2, relief="raised")
+frame.place(x=100, y=100, width=200, height=150)
+
+def start_drag(event):
+    frame._drag_start_x = event.x
+    frame._drag_start_y = event.y
+
+def drag(event):
+    x = frame.winfo_x() + event.x - frame._drag_start_x
+    y = frame.winfo_y() + event.y - frame._drag_start_y
+    frame.place(x=x, y=y)
+
+frame.bind("<Button-1>", start_drag)
+frame.bind("<B1-Motion>", drag)
+
+root.mainloop()
+🧠 How it works
+When you click → it remembers where inside the frame you clicked
+While dragging → it updates position using place()
+Boom: smooth movement
+🚀 Make it feel like a REAL window
+👉 Only drag from a “title bar”
+title = tk.Frame(frame, bg="gray", height=20)
+title.pack(fill="x")
+
+title.bind("<Button-1>", start_drag)
+title.bind("<B1-Motion>", drag)
+
+Now the main body can have buttons/text without dragging 👍
+
+👉 Bring to front when clicked
+frame.bind("<Button-1>", lambda e: frame.lift())
+
+Or combine it into your drag start:
+
+def start_drag(event):
+    frame.lift()
+    frame._drag_start_x = event.x
+    frame._drag_start_y = event.y
+👉 Keep it inside the window (optional)
+
+Clamp position so it doesn’t fly offscreen:
+
+def drag(event):
+    x = max(0, min(root.winfo_width() - frame.winfo_width(),
+                   frame.winfo_x() + event.x - frame._drag_start_x))
+    y = max(0, min(root.winfo_height() - frame.winfo_height(),
+                   frame.winfo_y() + event.y - frame._drag_start_y))
+    frame.place(x=x, y=y)
+💡 Pro tip (this will help your project a LOT)
+
+Wrap it into a reusable “window” class:
+
+class DraggableWindow(tk.Frame):
+    def __init__(self, parent, **kwargs):
+        super().__init__(parent, bd=2, relief="raised", **kwargs)
+
+        self.place(x=50, y=50, width=200, height=150)
+
+        title = tk.Frame(self, bg="gray", height=20)
+        title.pack(fill="x")
+
+        title.bind("<Button-1>", self.start_drag)
+        title.bind("<B1-Motion>", self.drag)
+
+    def start_drag(self, event):
+        self.lift()
+        self._x = event.x
+        self._y = event.y
+
+    def drag(self, event):
+        x = self.winfo_x() + event.x - self._x
+        y = self.winfo_y() + event.y - self._y
+        self.place(x=x, y=y)
+🧩 What you just unlocked
+
+With this + overlays:
+
+Floating terminal ✅
+Guidebook panel ✅
+Click-to-focus layering ✅
+No OS jank ✅
+
+You basically just built a mini window manager inside Tkinter 😄
+
+If you want next step:
+👉 resizing windows
+👉 snapping (I know you said no 😏 but I can make it stupid simple)
+👉 docking panels
+
+Just say the word 👀
+
+... could you greate a demo program for this?
+
+Absolutely 😄 let’s build you a clean little demo that feels like a mini desktop inside Tkinter.
+
+This will have:
+
+draggable “windows”
+title bars
+click-to-front behavior
+multiple overlapping panels (like your terminal + guidebook idea)
+🧪 Full Demo Program
+import tkinter as tk
+
+class DraggableWindow(tk.Frame):
+    def __init__(self, parent, title="Window", x=50, y=50, w=200, h=150, color="lightgray"):
+        super().__init__(parent, bd=2, relief="raised", bg=color)
+
+        # Position using place (IMPORTANT for overlapping)
+        self.place(x=x, y=y, width=w, height=h)
+
+        # Title bar
+        self.title_bar = tk.Frame(self, bg="gray", height=20)
+        self.title_bar.pack(fill="x")
+
+        self.title_label = tk.Label(self.title_bar, text=title, bg="gray", fg="white")
+        self.title_label.pack(side="left", padx=5)
+
+        # Content area
+        self.content = tk.Frame(self, bg=color)
+        self.content.pack(fill="both", expand=True)
+
+        # Drag bindings (only on title bar)
+        self.title_bar.bind("<Button-1>", self.start_drag)
+        self.title_bar.bind("<B1-Motion>", self.drag)
+
+        # Bring to front on click (anywhere in window)
+        self.bind("<Button-1>", self.bring_to_front)
+        self.title_bar.bind("<Button-1>", self.start_drag)
+        self.title_label.bind("<Button-1>", self.start_drag)
+
+    def bring_to_front(self, event=None):
+        self.lift()
+
+    def start_drag(self, event):
+        self.lift()
+        self._drag_x = event.x
+        self._drag_y = event.y
+
+    def drag(self, event):
+        new_x = self.winfo_x() + event.x - self._drag_x
+        new_y = self.winfo_y() + event.y - self._drag_y
+        self.place(x=new_x, y=new_y)
+
+
+# Main app
+root = tk.Tk()
+root.geometry("600x450")
+root.title("Tkinter Window System Demo")
+
+# Background frame (acts like your "main window")
+background = tk.Frame(root, bg="darkblue")
+background.place(relwidth=1, relheight=1)
+
+# Create multiple draggable windows
+win1 = DraggableWindow(root, title="Terminal", x=80, y=80, color="#2b2b2b")
+tk.Label(win1.content, text="> hello world", fg="lime", bg="#2b2b2b").pack(padx=10, pady=10)
+
+win2 = DraggableWindow(root, title="Guidebook", x=200, y=150, color="#ddd")
+tk.Label(win2.content, text="This is your guidebook!", bg="#ddd").pack(padx=10, pady=10)
+
+win3 = DraggableWindow(root, title="Extra Panel", x=150, y=50, color="#cce")
+tk.Button(win3.content, text="Click me").pack(padx=10, pady=10)
+
+root.mainloop()
+🎮 What to try when you run it
+Drag windows by the title bar
+Click different windows → they come to front
+Stack them on top of each other
+Move them around freely
+🚀 Where you can take this next
+
+You can easily extend this into your actual project:
+
+Add close button
+btn = tk.Button(self.title_bar, text="X", command=self.destroy)
+btn.pack(side="right")
+Add resizing (if you dare 😏)
+detect dragging on edges
+adjust width/height
+Make your terminal real
+replace label with Text widget
+Toggle windows
+win1.place_forget()  # hide
+win1.place(x=100, y=100)  # show again
+🧩 Big win here
+
+This setup gives you:
+
+everything you wanted from Toplevel
+none of the OS weirdness
+full control
+
+If you want, I can help you turn this into:
+👉 a proper reusable window manager class
+👉 tabbed panels
+👉 or even a fake “taskbar” 😄
+
+is it possible to make the windows stop at the edge so i cant put them off screen?
+
+Oh yeah 😄 that’s actually a super easy upgrade—and it makes everything feel way more polished.
+
+What you want is called clamping the position.
+
+🔒 Keep windows inside the screen
+
+Modify your drag() function like this:
+
+def drag(self, event):
+    new_x = self.winfo_x() + event.x - self._drag_x
+    new_y = self.winfo_y() + event.y - self._drag_y
+
+    # Get parent (root) size
+    parent_width = self.master.winfo_width()
+    parent_height = self.master.winfo_height()
+
+    # Get window size
+    win_width = self.winfo_width()
+    win_height = self.winfo_height()
+
+    # Clamp position
+    new_x = max(0, min(new_x, parent_width - win_width))
+    new_y = max(0, min(new_y, parent_height - win_height))
+
+    self.place(x=new_x, y=new_y)
+🧠 What this does
+Prevents going left of 0
+Prevents going above 0
+Prevents going past right edge
+Prevents going past bottom edge
+
+So your window is always fully visible 👍
+
+🔥 Optional: allow partial off-screen (more realistic feel)
+
+If you want that “real OS window” vibe where you can slightly drag it off:
+
+margin = 40  # how much can go off screen
+
+new_x = max(-margin, min(new_x, parent_width - win_width + margin))
+new_y = max(-margin, min(new_y, parent_height - win_height + margin))
+🧪 Bonus polish ideas
+👉 Snap to edges (super simple version)
+snap = 15
+
+if abs(new_x) < snap:
+    new_x = 0
+if abs(new_y) < snap:
+    new_y = 0
+👉 Prevent dragging when clicking buttons inside
+
+Only bind drag to title bar (which you're already doing 👍)
+
+🧩 Result
+
+Now your windows:
+
+won’t disappear off-screen ✅
+feel more “real” ✅
+are harder to lose ✅
+
+If you want next-level polish:
+👉 smooth dragging inertia
+👉 resizing handles
+👉 snapping (yes yes I know you said no 😏)
+
+Just say the word and we’ll turn this into a full UI system lol
