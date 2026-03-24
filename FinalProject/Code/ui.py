@@ -70,7 +70,7 @@ def add_frame(name, parent, xpad, ypad, dict_frames, LorR, TorB, backg, fill):
         frame.pack_configure(pady=ypad, padx=xpad,fill=tk.X,expand=True)
     elif fill.lower() == "y":
         print("fill Y")
-        frame.pack_configure(pady=ypad, padx=xpad,fill=tk.Y,expand=True)
+        frame.pack_configure(pady=ypad, padx=xpad,fill=tk.Y)
     elif fill.lower() == "both":
         print ("fill both")
         frame.pack_configure(pady=ypad, padx=xpad,fill=tk.BOTH,expand=True)
