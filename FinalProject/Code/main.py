@@ -33,22 +33,26 @@ def main():
     dict_vars["temperature_F"] = 32
     #create dictionaries and lists
     ls_root = [] #0=root 1=settings menu 2=main game window 3=psedo-terminal
-    ls_terminal = [] #0=pseudo-terminal
+    ls_terminal = [] #0=pseudo-terminal text area
     ls_threads = [] #0=game logic loop thread
+    ls_frame_windows = []#0=Guidebook #1=terminal
 
     dict_buttons = {}
     dict_sliders = {}
     dict_labels = {}
     dict_entries = {}
     dict_frames = {}
-    ui.create_main_ui("main window", "1920x1080", True, ls_root, ls_terminal)
+
+    ui.create_main_ui("main window", "1920x1080", True, ls_root, ls_terminal, ls_frame_windows, dict_frames)
     print(ls_root)
     print("game now loading...")
     
     print(dict_buttons)
-    
-    
-    ui.hide(ls_root[4])
+    ui.add_frame("game window", ls_root[2], 1, 1, dict_frames, "left", "None", "black", "Both")
+    ui.add_frame("main frame", dict_frames["game window"], 1, 1, dict_frames, "left", "none", "grey", "both")
+    pt.start_terminal(ls_terminal, ls_root, dict_frames)
+    pt.startup(ls_terminal[0])
+
     pt.hide(ls_root[3])
     ui.hide(ls_root[2])
     ui.hide(ls_root[1])
@@ -57,12 +61,14 @@ def main():
     ui.add_button("settings", ls_root[0], 20, 20, lambda: ui.settings(ls_root[1]), dict_buttons)
     ui.add_button("quit", ls_root[0], 20, 120, lambda: ui.quitgame(ls_root[0]), dict_buttons)
 
-    ui.add_frame("sidebar", ls_root[2], 1, 1, dict_frames, "left", "None", "grey", "y")
+
+
+    ui.add_frame("sidebar", dict_frames["game window"], 1, 1, dict_frames, "left", "None", "grey", "y")
     ui.add_label("sidebar title", dict_frames["sidebar"], 20, 20, "sidebar!",  dict_labels, "none", "None", "light grey")
     ui.add_label("day counter", dict_frames["sidebar"], 20, 20, "", dict_labels, "none", "none", "light grey" )
-    ui.add_button("Guide", dict_frames["sidebar"], 20, 120, lambda: ui.guidebook(ls_root), dict_buttons)
+    ui.add_button("Guide", dict_frames["sidebar"], 20, 120, lambda: ui.guidebook(ls_frame_windows, dict_frames), dict_buttons)
 
-    ui.add_frame("main frame", ls_root[2], 1, 1, dict_frames, "left", "none", "grey", "both")
+   
     ui.add_label("game window label", dict_frames["main frame"], 20, 20, f"------------------", dict_labels, "None", "None", "grey")
     ui.add_button("terminal", dict_frames["main frame"], 20, 20, lambda: pt.show(ls_root, ls_terminal), dict_buttons)
     

@@ -10,7 +10,7 @@ import winsound as ws
 import tkinter as tk
 from tkinter import ttk
 
-def start_terminal(ls_terminal, ls_root):
+def start_terminal(ls_terminal, ls_root, dict_frames):
     ls_commands = ["hello","help","exit", "nuke", "pseudo"] #pseudo will have a similar function to sudo with the pseudo-terminal because funnies lol
     def handle_command(command):
         command = command.strip().lower()
@@ -39,8 +39,7 @@ def start_terminal(ls_terminal, ls_root):
             text_area.see(tk.END)
             text_area.config(state=tk.DISABLED)
 
-    terminal = tk.Toplevel()
-    terminal.title("Terminal")
+    terminal = misc.DraggableWindow(dict_frames["main frame"], title="Terminal", x=80, y=80, w=650, h=500, color="black")
 
     text_area = tk.Text(terminal, bg="black", fg="white")
     text_area.pack(pady=1, fill=tk.BOTH, expand=True)
@@ -75,11 +74,11 @@ def startup(ls_terminal):
         ls_terminal.config(state=tk.DISABLED)  
 
 def show(ls_root, ls_terminal):
-    if len(ls_root) > 3 and ls_root[3] and ls_root[3].winfo_exists():
-        ls_root[3].deiconify()
+    if ls_root[3].winfo_exists():
+        ls_root[3].place(x=80, y=80, w=650, h=500)
     else:
         start_terminal(ls_terminal, ls_root)
         startup(ls_terminal[0])
         
 def hide(ls_root):
-    ls_root.withdraw()
+    ls_root.place_forget()
