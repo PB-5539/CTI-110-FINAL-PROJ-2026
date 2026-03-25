@@ -93,8 +93,8 @@ def add_frame(name, parent, xpad, ypad, dict_frames, LorR, TorB, backg, fill):
 def play(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars):
     ls_root[0].withdraw()
     ls_root[2].deiconify()
-    #loop.begin_day_loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars) #manages the day cycle using the time and random modules and various loops and conditional branches
-    #loop.begin_loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars)#manages most behaviors, most of which are conditional if or elif or else statements, maybe some switch cases and various loops
+    loop.begin_day_loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars) #manages the day cycle using the time and random modules and various loops and conditional branches
+    loop.begin_loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars)#manages most behaviors, most of which are conditional if or elif or else statements, maybe some switch cases and various loops
 
     print("play!")
 
