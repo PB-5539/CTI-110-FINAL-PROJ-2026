@@ -49,6 +49,7 @@ def main():
     
     print(dict_buttons)
     ui.add_frame("game window", ls_root[2], 1, 1, dict_frames, "left", "None", "black", "Both")
+    ui.add_frame("sidebar", dict_frames["game window"], 1, 1, dict_frames, "left", "None", "grey", "y")
     ui.add_frame("main frame", dict_frames["game window"], 1, 1, dict_frames, "left", "none", "grey", "both")
     pt.start_terminal(ls_terminal, ls_root, dict_frames)
     pt.startup(ls_terminal[0])
@@ -63,14 +64,14 @@ def main():
 
 
 
-    ui.add_frame("sidebar", dict_frames["game window"], 1, 1, dict_frames, "left", "None", "grey", "y")
+
     ui.add_label("sidebar title", dict_frames["sidebar"], 20, 20, "sidebar!",  dict_labels, "none", "None", "light grey")
     ui.add_label("day counter", dict_frames["sidebar"], 20, 20, "", dict_labels, "none", "none", "light grey" )
     ui.add_button("Guide", dict_frames["sidebar"], 20, 120, lambda: ui.guidebook(ls_frame_windows, dict_frames), dict_buttons)
 
    
     ui.add_label("game window label", dict_frames["main frame"], 20, 20, f"------------------", dict_labels, "None", "None", "grey")
-    ui.add_button("terminal", dict_frames["main frame"], 20, 20, lambda: pt.show(ls_root, ls_terminal), dict_buttons)
+    ui.add_button("terminal", dict_frames["main frame"], 20, 20, lambda: pt.show(ls_root, ls_terminal, dict_frames), dict_buttons)
     
     #ui.add_label("cycle length")
     #au.play_audio("MainMenu.wav")

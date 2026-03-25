@@ -19,7 +19,7 @@ def start_terminal(ls_terminal, ls_root, dict_frames):
         elif command == ls_commands[1]:
             return f"{ls_commands}\n"
         elif command == ls_commands[2]:
-            terminal.withdraw()
+            hide(ls_root[3])
         elif command == ls_commands[3]:
             ui.quitgame(ls_root[0])
             return command
@@ -73,11 +73,12 @@ def startup(ls_terminal):
         ls_terminal.insert(tk.END, f'Welcome To EvrenOS, type "help" for a list of commands.\n')  
         ls_terminal.config(state=tk.DISABLED)  
 
-def show(ls_root, ls_terminal):
+def show(ls_root, ls_terminal, dict_frames):
+    print(ls_root[3].winfo_exists())
     if ls_root[3].winfo_exists():
-        ls_root[3].place(x=80, y=80, w=650, h=500)
+        ls_root[3].place(x=80, y=80, width=650, height=500)
     else:
-        start_terminal(ls_terminal, ls_root)
+        start_terminal(ls_terminal, ls_root, dict_frames)
         startup(ls_terminal[0])
         
 def hide(ls_root):
