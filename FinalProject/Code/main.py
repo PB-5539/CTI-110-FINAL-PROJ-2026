@@ -82,6 +82,8 @@ def main():
     ui.add_label("Label", dict_frames["top middle"], 20, 20, "Label", dict_labels, "none", "none", "light grey")
     ui.add_frame("top right", dict_frames["main frame"], 1, 1, dict_frames, "left", "None", "green", "both")
     ui.add_label("Label", dict_frames["top right"], 20, 20, "Label", dict_labels, "none", "none", "light grey")
+
+    ui.add_slider("slidinator", dict_frames["top left"], 20, 20, dict_sliders)
     
     #ui.add_label("cycle length")
     #au.play_audio("MainMenu.wav")

@@ -49,9 +49,9 @@ def add_button(name, parent, xpad, ypad, action, dict_buttons):
     dict_buttons[name] = button
     return
 
-def add_slider(name, parent, xpad, ypad, action, dict_sliders):
-    print(f"creating slider Widget named: {name} name with parent: {parent} pad x: {xpad} pad y: {ypad} and action: {action}")
-    slider = tk.Scale(parent,from_=0, to=200, orient=tk.HORIZONTAL, label="Horizontal Slider")
+def add_slider(name, parent, xpad, ypad, dict_sliders):
+    print(f"creating slider Widget named: {name} name with parent: {parent} pad x: {xpad} pad y: {ypad}")
+    slider = tk.Scale(parent,from_=0, to=200, orient=tk.HORIZONTAL, label=f"{name}")
     slider.pack(pady=ypad, padx=xpad)
     dict_sliders[name] = slider
     return
@@ -100,8 +100,8 @@ def add_frame(name, parent, xpad, ypad, dict_frames, LorR, TorB, backg, fill):
 def play(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars):
     ls_root[0].withdraw()
     ls_root[2].deiconify()
-    loop.begin_day_loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars) #manages the day cycle using the time and random modules and various loops and conditional branches
-    loop.begin_loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars)#manages most behaviors, most of which are conditional if or elif or else statements, maybe some switch cases and various loops
+    #loop.begin_day_loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars) #manages the day cycle using the time and random modules and various loops and conditional branches
+    #loop.begin_loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars)#manages most behaviors, most of which are conditional if or elif or else statements, maybe some switch cases and various loops
 
     print("play!")
 
