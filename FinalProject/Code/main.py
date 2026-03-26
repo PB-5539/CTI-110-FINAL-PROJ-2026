@@ -42,6 +42,7 @@ def main():
     dict_labels = {}
     dict_entries = {}
     dict_frames = {}
+    dict_images = {}
 
     ui.create_main_ui("main window", "1920x1080", True, ls_root, ls_terminal, ls_frame_windows, dict_frames)
     print(ls_root)
