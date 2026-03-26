@@ -2,6 +2,7 @@ import math as mt
 import time as tm
 import random as rd
 
+#i would eventually like to add this as something you can play in the terminal of the main game lol
 
 
 def main(dict_player_info):
