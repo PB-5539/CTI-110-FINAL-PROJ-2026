@@ -31,6 +31,7 @@ def main():
     dict_vars["life_support_system_integrity"] = 1000
     dict_vars["temperature_C"] = 0
     dict_vars["temperature_F"] = 32
+    dict_vars["fun_value"] = rdm.randrange(0,100)
     #create dictionaries and lists
     ls_root = [] #0=root 1=settings menu 2=main game window 3=psedo-terminal
     ls_terminal = [] #0=pseudo-terminal text area
@@ -42,7 +43,6 @@ def main():
     dict_labels = {}
     dict_entries = {}
     dict_frames = {}
-    dict_images = {}
 
     ui.create_main_ui("main window", "1920x1080", True, ls_root, ls_terminal, ls_frame_windows, dict_frames)
     print(ls_root)
@@ -73,6 +73,15 @@ def main():
    
     ui.add_label("game window label", dict_frames["main frame"], 20, 20, f"------------------", dict_labels, "None", "None", "grey")
     ui.add_button("terminal", dict_frames["main frame"], 20, 20, lambda: pt.show(ls_root, ls_terminal, dict_frames), dict_buttons)
+
+
+    
+    ui.add_frame("top left", dict_frames["main frame"], 1, 1, dict_frames, "left", "None", "red", "both")
+    ui.add_label("Label", dict_frames["top left"], 20, 20, "Label", dict_labels, "none", "none", "light grey")
+    ui.add_frame("top middle", dict_frames["main frame"], 1, 1, dict_frames, "left", "None", "blue", "both")
+    ui.add_label("Label", dict_frames["top middle"], 20, 20, "Label", dict_labels, "none", "none", "light grey")
+    ui.add_frame("top right", dict_frames["main frame"], 1, 1, dict_frames, "left", "None", "green", "both")
+    ui.add_label("Label", dict_frames["top right"], 20, 20, "Label", dict_labels, "none", "none", "light grey")
     
     #ui.add_label("cycle length")
     #au.play_audio("MainMenu.wav")
