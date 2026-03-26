@@ -1,1 +1,0 @@
-My tkinter window for ls_root[2] (my main game window) is having an issue where between the sidebar frame and the main frame there are gaps. on the left and right of the sidebar frame has a large white gap in between.
