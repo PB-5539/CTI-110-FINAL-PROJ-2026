@@ -8,10 +8,25 @@ import random as rd
 def main(dict_player_info):
     ls_items = ["ominous horn", "shattered orb", "mysterious potion", "necromancer staff", "red orb", "glowing scroll", ]
     attempts = 0
-    player_stats = {"gold":0, "health":10, "arcane_dust":0}
+    player_stats = {"name":dict_player_info["name"],"gold":0, "health":10, "arcane_dust":0}
     dict_encounters = {"elf":["dialogue", "dialogue", "+8 gold"], "placeholder":["dialogue list...", "...", "reward"]}
 
-
+    while (player_stats["health"] > 0) and (player_stats["gold"] >=0 ):
+        player_stats["gold"] = player_stats["gold"] - 1 #THIS IS A PLACEHOLDER FOR THE GAME LOGIC
+    #on death/bankrupcy logic goes here
+    if (player_stats["gold"] < 0) and (player_stats["health"] > 0):
+        print()
+        print()
+        print("=====================")
+        print("  you went bankrupt! ")
+        print("=====================")
+    elif player_stats["health"] > 1:
+        print()
+        print()
+        print("=====================")
+        print("       you Died      ")
+        print("=====================")
+    print(overview(player_stats))
 
 
 
@@ -48,15 +63,15 @@ def intro():
     print()
     print("---\This is your status bar/---")
     tm.sleep(0.5)
-    print("         ===========")
+    print("         |===========|")
     tm.sleep(0.5)
-    print("         health:  10")
+    print("         |health:  10|")
     tm.sleep(0.5)
-    print("         gold:    0")
+    print("         |gold:    0 |")
     tm.sleep(0.5)
-    print("         Dust:    0")
+    print("         |Dust:    0 |")
     tm.sleep(0.5)
-    print("         ===========")
+    print("         |===========|")
     tm.sleep(2)
     print("---\open it at any time by/---")
     print("-/typing 'stat' in an input\-")
@@ -78,5 +93,11 @@ def encounter(ls_dialogue):
         print(ls_dialogue[i])
         tm.sleep(2)
 
+def overview(player_stats):
+    gold = player_stats["gold"]
+    health = player_stats["health"]
+    name = player_stats["name"]
+    overview = f"====overview====\n{'Name:':<12}{name}\n{'Gold:':<12}{gold:<12}\n{'Health:':<12}{health:<12}\n"
+    return overview
 
 main(intro())
