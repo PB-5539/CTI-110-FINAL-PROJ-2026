@@ -8,8 +8,9 @@ def main(dict_player_info):
     ls_items = ["ominous horn", "shattered orb", "mysterious potion", "necromancer staff", "red orb", "glowing scroll", ]
     attempts = 0
     player_stats = {"gold":0, "health":10, "arcane_dust":0}
+    dict_encounters = {"elf":["dialogue", "dialogue", "+8 gold"], "placeholder":["dialogue list...", "...", "reward"]}
 
-    
+
 
 
 
@@ -59,6 +60,9 @@ def intro():
     print("---\open it at any time by/---")
     print("-/typing 'stat' in an input\-")
     tm.sleep(2)
+    print("====================================================================")
+    print()
+    print("====================================================================")
     print()
     print("To start, What's your name?")
     tm.sleep(1)
@@ -66,6 +70,12 @@ def intro():
 
 
     return dict_player_info
+
+
+def encounter(ls_dialogue):
+    for i in range(len(ls_dialogue)):
+        print(ls_dialogue[i])
+        tm.sleep(2)
 
 
 main(intro())
