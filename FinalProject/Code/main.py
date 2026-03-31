@@ -68,6 +68,7 @@ def main():
 
     ui.add_label("sidebar title", dict_frames["sidebar"], 20, 20, "sidebar!",  dict_labels, "none", "None", "light grey")
     ui.add_label("day counter", dict_frames["sidebar"], 20, 20, "", dict_labels, "none", "none", "light grey" )
+    ui.add_label("timer", dict_frames["sidebar"], 20, 20, "", dict_labels, "none", "none", "light grey" )
     ui.add_button("Guide", dict_frames["sidebar"], 20, 120, lambda: ui.guidebook(ls_frame_windows, dict_frames), dict_buttons)
 
     
@@ -94,7 +95,7 @@ def main():
     #add a day counter and cycle tracker (time untill next cycle/day and how many cycles have passed)
     
     #run
-    ls_root[2].protocol( "WM_DELETE_WINDOW", lambda: ui.quitgame(ls_root[0]))
+    ls_root[2].protocol("WM_DELETE_WINDOW", lambda: ui.quitgame(ls_root[0]))
     ui.run(ls_root[0]) #THIS GOES AT THE END OF THE MAIN FUNCTION, ALL CODE AFTER IT WILL NOT RUN UNTILL THE WINDOWS HAVE EITHER BEEN CLOSED BY THE USER OR DESTROYRD VIA '<object name>.Destroy()'
 #run game
 main()

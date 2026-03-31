@@ -60,6 +60,7 @@ def day_loop(ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict
             au.play_audio("TutorialTheme.wav")
             for i in range(int(f"{misc.get_duration("TutorialTheme.wav"):.0f}")):
                 print(misc.get_duration("TutorialTheme.wav") - (i))
+                dict_labels["timer"].config(text=f"{int(misc.get_duration("TutorialTheme.wav") - (i))} seconds until day {day + 1}")
                 tm.sleep(1)
             day += 1
             print("counted a day")
@@ -68,6 +69,7 @@ def day_loop(ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict
             au.play_audio(f"Theme{day}.wav")
             for i in range(int(f"{misc.get_duration(f'Theme{day}.wav'):.0f}")):
                 print(misc.get_duration(f"Theme{day:.0f}.wav") - (i))
+                dict_labels["timer"].config(text=f"{int(misc.get_duration(f'Theme{day}.wav') - (i))} seconds until day {day + 1}")
                 tm.sleep(1)
             day += 1
         print("counted a day")
