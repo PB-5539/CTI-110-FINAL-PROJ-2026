@@ -32,15 +32,8 @@ def loop(ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_lab
         #todo:
         #check if the main game window (not the root window) exists, if not then call the function ui.quitgame()
         #format tm.time() to an actual clock dictionary
-    
-        
+
         dict_labels["sidebar title"].config(text=f"{tm.ctime()}")
-
-    
-        
-
-
-
 
         #write mutable variable dictionary for reading in the main thread
         dict_vars["structural_integrity"] = structural_integrity
@@ -48,23 +41,39 @@ def loop(ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_lab
         dict_vars["temperature_C"] = temperature_C
         dict_vars["temperature_F"] = temperature_F
         #Main Game logic---------------------/\
+
 def begin_loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars):
     thread = th.Thread(target=loop, args=(ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars),  daemon=True)
     thread.start()
     ls_threads.append(thread)
     return thread
+
 def day_loop(ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars):
     print("day loop ran", ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars)
-    
+    dict_vars["current cycle"] = 0
     #MAIN DAY CYCLE TIMING LOGIC ----------\/
     #stuff
     while True:
-        dict_labels["day counter"].config(text=str(dict_vars["current cycle"]))
-        au.play_audio("Theme1.wav")
-        tm.sleep(misc.get_duration("Theme1.wav"))
+        day = dict_vars["current cycle"]
+        if day == 0:
+            dict_labels["day counter"].config(text=str(day))
+            au.play_audio("TutorialTheme.wav")
+            for i in range(int(f"{misc.get_duration("TutorialTheme.wav"):.0f}")):
+                print(misc.get_duration("TutorialTheme.wav") - (i))
+                tm.sleep(1)
+            day += 1
+            print("counted a day")
+        else:
+            dict_labels["day counter"].config(text=str(day))
+            au.play_audio(f"Theme{day}.wav")
+            for i in range(int(f"{misc.get_duration(f'Theme{day}.wav'):.0f}")):
+                print(misc.get_duration(f"Theme{day:.0f}.wav") - (i))
+                tm.sleep(1)
+            day += 1
         print("counted a day")
+        dict_vars["current cycle"] = day
     #MAIN DAY CYCLE TIMING LOGIC ----------/\
-    
+
 def begin_day_loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars):
     thread = th.Thread(target=day_loop, args=(ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars),  daemon=True)
     thread.start()

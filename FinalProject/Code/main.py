@@ -70,7 +70,7 @@ def main():
     ui.add_label("day counter", dict_frames["sidebar"], 20, 20, "", dict_labels, "none", "none", "light grey" )
     ui.add_button("Guide", dict_frames["sidebar"], 20, 120, lambda: ui.guidebook(ls_frame_windows, dict_frames), dict_buttons)
 
-   
+    
     ui.add_label("game window label", dict_frames["main frame"], 20, 20, f"------------------", dict_labels, "None", "None", "grey")
     ui.add_button("terminal", dict_frames["main frame"], 20, 20, lambda: pt.show(ls_root, ls_terminal, dict_frames), dict_buttons)
 
@@ -88,8 +88,7 @@ def main():
     #ui.add_label("cycle length")
     #au.play_audio("MainMenu.wav")
 
-    #TO DO: 
-    #add top/botton alignment logic
+    #TO DO:
     #make an audio thread / play audio during cycles and have the cycle end when the music ends for variable cycle lengths
     #add day cycle using time and random modules
     #add a day counter and cycle tracker (time untill next cycle/day and how many cycles have passed)

@@ -7,6 +7,6 @@ def play_audio(filename):
     # Check if file exists
     if os.path.isfile(wav_file):
         print("Playing:", wav_file)
-        winsound.PlaySound(wav_file, winsound.SND_FILENAME)
+        winsound.PlaySound(wav_file, winsound.SND_FILENAME | winsound.SND_ASYNC)
     else:
         print("File not found:", wav_file)

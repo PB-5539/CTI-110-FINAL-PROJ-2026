@@ -12,7 +12,7 @@ def get_duration(filename):
         frames = f.getnframes()
         rate = f.getframerate()
         duration = frames / float(rate)
-        print(f"Duration: {duration:.2f} seconds")
+        print(f"Duration: {duration:.0f} seconds")
         return duration
 
 class DraggableWindow(tk.Frame):
