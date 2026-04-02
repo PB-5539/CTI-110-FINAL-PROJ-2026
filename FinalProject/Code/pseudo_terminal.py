@@ -11,7 +11,7 @@ import tkinter as tk
 from tkinter import ttk
 
 def start_terminal(ls_terminal, ls_root, dict_frames):
-    ls_commands = ["hello","help","exit", "nuke", "pseudo"] #pseudo will have a similar function to sudo with the pseudo-terminal because funnies lol
+    ls_commands = ["hello","help","exit", "nuke", "pseudo", "clear"] #pseudo will have a similar function to sudo with the pseudo-terminal because funnies lol
     def handle_command(command):
         ls_hi = ["Hi!","Hello!","Greetings!","Welcome!","G'day Mate!", "Hey!", "How's Existence?" ]
         command = command.strip().lower()
@@ -27,6 +27,11 @@ def start_terminal(ls_terminal, ls_root, dict_frames):
             return f"Mising required argument(s), try 'help pseudo'"
         elif command == "":
             return f"No command. type 'help' for a list of commands"
+        elif command == "clear":
+            text_area.config(state=tk.NORMAL)
+            text_area.delete(1.0, tk.END)
+            text_area.config(state=tk.DISABLED)
+            return ""
         elif command == ls_commands[3]:
             ui.quitgame(ls_root[0])
             return command

@@ -74,7 +74,9 @@ def slider_value(slider):
 
 def tween_slider(slider, target):
     current_value = slider.get()
-    while current_value != target:
+    epoch = 0
+    while (current_value != target) and (not(epoch > 100)):
+        epoch += 1
         current_value = slider.get()
         if current_value < target:
             slider.set(current_value + 1)

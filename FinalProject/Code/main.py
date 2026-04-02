@@ -20,9 +20,11 @@ def main():
     dict_vars["current_cycle_tday"] = 0
     dict_vars["structural_integrity"] = 1000
     dict_vars["life_support_system_integrity"] = 1000
+    dict_vars["propulsion_system_integrity"] = 1000
     dict_vars["temperature_C"] = 0
     dict_vars["temperature_F"] = 32
     dict_vars["fun_value"] = rdm.randrange(0,100)
+    #the fun value is a variable hidden from the user that dictates the rate of occurance for random events.
     dict_vars["oxy_err"] = False
     dict_vars["sens_err"] = False
     dict_vars["align_err"] = False
@@ -65,14 +67,15 @@ def main():
     ui.add_label("game window label", dict_frames["main frame"], 20, 20, f"------------------", dict_labels, "None", "None", "grey")
     ui.add_button("terminal", dict_frames["main frame"], 20, 20, lambda: pt.show(ls_root, ls_terminal, dict_frames), dict_buttons)
 
-    ui.add_frame("top left", dict_frames["main frame"], 1, 1, dict_frames, "left", "None", "red", "both")
-    ui.add_label("Label", dict_frames["top left"], 20, 20, "Label", dict_labels, "none", "none", "light grey")
-    ui.add_frame("top middle", dict_frames["main frame"], 1, 1, dict_frames, "left", "None", "blue", "both")
-    ui.add_label("Label", dict_frames["top middle"], 20, 20, "Label", dict_labels, "none", "none", "light grey")
-    ui.add_frame("top right", dict_frames["main frame"], 1, 1, dict_frames, "left", "None", "green", "both")
-    ui.add_label("Label", dict_frames["top right"], 20, 20, "Label", dict_labels, "none", "none", "light grey")
+    ui.add_frame("top left", dict_frames["main frame"], 1, 1, dict_frames, "left", "None", "light grey", "both")
+    ui.add_label("Life Support Systems", dict_frames["top left"], 20, 20, "Life Support Systems", dict_labels, "none", "none", "light grey")
+    ui.add_frame("top middle", dict_frames["main frame"], 1, 1, dict_frames, "left", "None", "light grey", "both")
+    ui.add_label("Propulsion Systems", dict_frames["top middle"], 20, 20, "Propulsion Systems", dict_labels, "none", "none", "light grey")
+    ui.add_frame("top right", dict_frames["main frame"], 1, 1, dict_frames, "left", "None", "light grey", "both")
+    ui.add_label("Structural Systems", dict_frames["top right"], 20, 20, "Structural Systems", dict_labels, "none", "none", "light grey")
 
-    ui.add_slider("slidinator", dict_frames["top left"], 20, 20, dict_sliders)
+    ui.add_slider("Air Flow Rate", dict_frames["top left"], 20, 20, dict_sliders)
+    dict_sliders["Air Flow Rate"].set(100)
     
     #ui.add_label("cycle length")
     #au.play_audio("MainMenu.wav")

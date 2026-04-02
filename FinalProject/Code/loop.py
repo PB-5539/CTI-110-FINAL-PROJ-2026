@@ -14,7 +14,8 @@ import tasks as tsk
 import alerts as als
 import pseudo_terminal as pt
 
-def loop(ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars):
+def loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars):
+    tween_thread = None
     while True:
         print(ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars)
         #Main Game Logic---------------------\/
@@ -26,15 +27,23 @@ def loop(ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_lab
         life_support_system_integrity = dict_vars["life_support_system_integrity"]
         temperature_C = dict_vars["temperature_C"]
         temperature_F = dict_vars["temperature_F"]
-
         print(f"{days}\n{current_cycle}\n{structural_integrity}\n{life_support_system_integrity}\n{temperature_C}\n{temperature_F}\n")
-        tm.sleep(0.5)
-        misc.tween_slider(dict_sliders["slidinator"], rdm.randrange(5,185))
+        if tween_thread is None or not tween_thread.is_alive():
+            tween_thread = th.Thread(target=misc.tween_slider, args=(dict_sliders["Air Flow Rate"], rdm.randrange(5,185)), daemon=True)
+            tween_thread.start()
+            ls_threads.append(tween_thread)
+        #goal is to keep it within the range of 60-130 and not let it be out of that range for more than 60 seconds and not at any extreme values (<15 and >185) for more than 25 seconds, if it is then the life support system integrity will decrease by 10 points every 2.5 seconds until it is back in the safe range, if it reaches 0  then the game is over
+        #each day a percentage of the remaining integrity of each item will be repaired.    
+    
+        
+        
+        
+        
         #todo:
         #check if the main game window (not the root window) exists, if not then call the function ui.quitgame()
         #format tm.time() to an actual clock dictionary
 
-        dict_labels["sidebar title"].config(text=f"{tm.ctime()}")
+        
 
         #write mutable variable dictionary for reading in the main thread
         dict_vars["structural_integrity"] = structural_integrity
@@ -44,7 +53,7 @@ def loop(ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_lab
         #Main Game logic---------------------/\
 
 def begin_loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars):
-    thread = th.Thread(target=loop, args=(ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars),  daemon=True)
+    thread = th.Thread(target=loop, args=(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars),  daemon=True)
     thread.start()
     ls_threads.append(thread)
     return thread
@@ -74,6 +83,7 @@ def day_loop(ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict
             for i in range(int(f"{misc.get_duration("TutorialTheme.wav"):.0f}")):
                 print(misc.get_duration("TutorialTheme.wav") - (i))
                 dict_labels["timer"].config(text=f"{int(misc.get_duration("TutorialTheme.wav") - (i))} seconds until Day {tomorrow}")
+                dict_labels["sidebar title"].config(text=f"{tm.ctime()}")
                 tm.sleep(1)
             day += 1
             true_day += 1
@@ -87,6 +97,7 @@ def day_loop(ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict
             for i in range(int(f"{misc.get_duration(f'Theme{day}.wav'):.0f}")):
                 print(misc.get_duration(f"Theme{day:.0f}.wav") - (i))
                 dict_labels["timer"].config(text=f"{int(misc.get_duration(f'Theme{day}.wav') - (i))} seconds until Day {tomorrow}")
+                dict_labels["sidebar title"].config(text=f"{tm.ctime()}")
                 tm.sleep(1)
             day += 1
             true_day += 1
