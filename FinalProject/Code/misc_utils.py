@@ -68,3 +68,16 @@ class DraggableWindow(tk.Frame):
         new_y = max(0, min(new_y, parent_height - win_height))
 
         self.place(x=new_x, y=new_y)
+        
+def slider_value(slider):
+    return slider.get()
+
+def tween_slider(slider, target):
+    current_value = slider.get()
+    while current_value != target:
+        current_value = slider.get()
+        if current_value < target:
+            slider.set(current_value + 1)
+        elif current_value > target:
+            slider.set(current_value - 1)
+        tm.sleep(0.1)

@@ -4,21 +4,10 @@
 # Create a game using the 'time' and 'random' modules and use loops and functions (include a main() function to run the program).
 
 #----import python modules
-import math as mt
 import random as rdm
-import time as tm
-import tkinter as tk
 #----import internal modules
-import misc_utils as misc
 import ui
-import events as ev
-import tasks as tsk
-import alerts as als
-import audio_utils as au
 import pseudo_terminal as pt
-import loop
-
-
 
 #----Main function
 def main():
@@ -27,6 +16,8 @@ def main():
     dict_vars = {"days":0, "current_cycle":0, "structural_integrity":0, "life_support_system_integrity":0, "temperature_C":0, "temperature_F":0}
     dict_vars["days"] = rdm.randrange(30,55,1)
     dict_vars["current_cycle"] = 0
+    dict_vars["current_cycle_week"] = 1
+    dict_vars["current_cycle_tday"] = 0
     dict_vars["structural_integrity"] = 1000
     dict_vars["life_support_system_integrity"] = 1000
     dict_vars["temperature_C"] = 0
@@ -66,20 +57,14 @@ def main():
     ui.add_button("settings", ls_root[0], 20, 20, lambda: ui.settings(ls_root[1]), dict_buttons)
     ui.add_button("quit", ls_root[0], 20, 120, lambda: ui.quitgame(ls_root[0]), dict_buttons)
 
-
-
-
     ui.add_label("sidebar title", dict_frames["sidebar"], 20, 20, "sidebar!",  dict_labels, "none", "None", "light grey")
     ui.add_label("day counter", dict_frames["sidebar"], 20, 20, "", dict_labels, "none", "none", "light grey" )
     ui.add_label("timer", dict_frames["sidebar"], 20, 20, "", dict_labels, "none", "none", "light grey" )
     ui.add_button("Guide", dict_frames["sidebar"], 20, 120, lambda: ui.guidebook(ls_frame_windows, dict_frames), dict_buttons)
 
-    
     ui.add_label("game window label", dict_frames["main frame"], 20, 20, f"------------------", dict_labels, "None", "None", "grey")
     ui.add_button("terminal", dict_frames["main frame"], 20, 20, lambda: pt.show(ls_root, ls_terminal, dict_frames), dict_buttons)
 
-
-    
     ui.add_frame("top left", dict_frames["main frame"], 1, 1, dict_frames, "left", "None", "red", "both")
     ui.add_label("Label", dict_frames["top left"], 20, 20, "Label", dict_labels, "none", "none", "light grey")
     ui.add_frame("top middle", dict_frames["main frame"], 1, 1, dict_frames, "left", "None", "blue", "both")
@@ -96,7 +81,7 @@ def main():
     #make an audio thread / play audio during cycles and have the cycle end when the music ends for variable cycle lengths
     #add day cycle using time and random modules
     #add a day counter and cycle tracker (time untill next cycle/day and how many cycles have passed)
-    
+
     #run
     ls_root[2].protocol("WM_DELETE_WINDOW", lambda: ui.quitgame(ls_root[0]))
     ui.run(ls_root[0]) #THIS GOES AT THE END OF THE MAIN FUNCTION, ALL CODE AFTER IT WILL NOT RUN UNTILL THE WINDOWS HAVE EITHER BEEN CLOSED BY THE USER OR DESTROYRD VIA '<object name>.Destroy()'
