@@ -32,6 +32,9 @@ def main():
     dict_vars["temperature_C"] = 0
     dict_vars["temperature_F"] = 32
     dict_vars["fun_value"] = rdm.randrange(0,100)
+    dict_vars["oxy_err"] = False
+    dict_vars["sens_err"] = False
+    dict_vars["align_err"] = False
     #create dictionaries and lists
     ls_root = [] #0=root 1=settings menu 2=main game window 3=psedo-terminal
     ls_terminal = [] #0=pseudo-terminal text area

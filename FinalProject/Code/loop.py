@@ -50,11 +50,11 @@ def begin_loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dic
 
 def day_loop(ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars):
     print("day loop ran", ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars)
-    dict_vars["current cycle"] = 0
+    dict_vars["current_cycle"] = 0
     #MAIN DAY CYCLE TIMING LOGIC ----------\/
     #stuff
     while True:
-        day = dict_vars["current cycle"]
+        day = dict_vars["current_cycle"]
         if day == 0:
             dict_labels["day counter"].config(text=str(day))
             au.play_audio("TutorialTheme.wav")
@@ -73,7 +73,7 @@ def day_loop(ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict
                 tm.sleep(1)
             day += 1
         print("counted a day")
-        dict_vars["current cycle"] = day
+        dict_vars["current_cycle"] = day
     #MAIN DAY CYCLE TIMING LOGIC ----------/\
 
 def begin_day_loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars):
