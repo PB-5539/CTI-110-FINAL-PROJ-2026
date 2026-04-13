@@ -20,6 +20,7 @@ def loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_fram
         print(ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars)
         #Main Game Logic---------------------\/
         print("game logic")
+        dict_vars["p_valve"] = False
         #read all variables and write to local variables
         days = dict_vars["days"]
         current_cycle = dict_vars["current_cycle"]

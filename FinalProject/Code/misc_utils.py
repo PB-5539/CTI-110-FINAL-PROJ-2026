@@ -83,3 +83,5 @@ def tween_slider(slider, target):
         elif current_value > target:
             slider.set(current_value - 1)
         tm.sleep(0.1)
+def open_prerelval(dict_vars):
+    dict_vars["p_valve"] = True

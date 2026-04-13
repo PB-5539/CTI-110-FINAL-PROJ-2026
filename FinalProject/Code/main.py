@@ -7,6 +7,7 @@
 import random as rdm
 #----import internal modules
 import ui
+import misc_utils as misc
 import pseudo_terminal as pt
 
 #----Main function
@@ -76,6 +77,14 @@ def main():
 
     ui.add_slider("Air Flow Rate", dict_frames["top left"], 20, 20, dict_sliders)
     dict_sliders["Air Flow Rate"].set(100)
+
+    ui.add_slider("Oxygen Flow rate", dict_frames["top middle"], 20, 20, dict_sliders)
+    dict_sliders["Oxygen Flow rate"].set(100)
+    ui.add_slider("Hydrogen Flow Rate", dict_frames["top middle"], 20, 20, dict_sliders)
+    dict_sliders["Hydrogen Flow Rate"].set(100)
+
+    ui.add_label("Pressure", dict_frames["top right"], 20, 20, "Pressure", dict_labels, "none", "none", "light grey")
+    ui.add_button("Pressure relief valve", dict_frames["top right"], 20, 20, lambda: misc.open_prerelval(dict_vars), dict_buttons)
     
     #ui.add_label("cycle length")
     #au.play_audio("MainMenu.wav")
