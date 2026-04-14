@@ -72,16 +72,31 @@ class DraggableWindow(tk.Frame):
 def slider_value(slider):
     return slider.get()
 
-def tween_slider(slider, target):
-    current_value = slider.get()
+def tween_slider(slider_key, slider_dict, target):
+    """Tween a slider value smoothly over time (queue-safe for background threads).
+    NEVER reads directly from slider widget - uses queued value tracking instead.
+    
+    Args:
+        slider_key: The key name for the slider (must match in dict_sliders)
+        slider_dict: The dict_sliders dictionary from main
+        target: Target value to reach
+    """
+    import loop
+    
+    # Get initial value from loop's tracking dict, not from widget
+    current_value = loop.slider_current_values.get(slider_key, 100)  # Default to 100 if not tracked
     epoch = 0
+    
     while (current_value != target) and (not(epoch > 100)):
         epoch += 1
-        current_value = slider.get()
+        
         if current_value < target:
-            slider.set(current_value + 1)
+            current_value += 1
+            loop.queue_slider_value(slider_key, current_value)
         elif current_value > target:
-            slider.set(current_value - 1)
+            current_value -= 1
+            loop.queue_slider_value(slider_key, current_value)
+        
         tm.sleep(0.1)
 def open_prerelval(dict_vars):
     dict_vars["p_valve"] = True
