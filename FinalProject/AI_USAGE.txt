@@ -1030,3 +1030,71 @@ Key Benefits
 ✅ Non-blocking - Background threads don't wait for updates
 
 Now when you open the terminal, there's zero chance of a race condition because the main thread is the only thread touching widgets!
+
+some various messages later i ended up with this code but the ftcc computer cleared my message history so all i have is the code
+ #----Thread-safe widget update handler
+    update_counter = 0
+    
+    # Initialize slider tracking for background threads
+    for slider_key in dict_sliders.keys():
+        try:
+            loop.slider_current_values[slider_key] = dict_sliders[slider_key].get()
+        except:
+            loop.slider_current_values[slider_key] = 100
+    
+    def update_widgets():
+        """Process all queued widget updates on the main tkinter thread.
+        This runs as fast as possible (1ms) to apply changes from background threads safely.
+        """
+        nonlocal update_counter
+        update_counter += 1
+        
+        # Process widget config updates
+        if loop.pending_widget_updates:
+            for widget_key, attrs in list(loop.pending_widget_updates.items()):
+                # Find the widget in the dictionaries
+                widget = None
+                if widget_key in dict_labels:
+                    widget = dict_labels[widget_key]
+                elif widget_key in dict_buttons:
+                    widget = dict_buttons[widget_key]
+                elif widget_key in dict_sliders:
+                    widget = dict_sliders[widget_key]
+                elif widget_key in dict_frames:
+                    widget = dict_frames[widget_key]
+                
+                # Apply the update SAFELY on main thread
+                if widget:
+                    try:
+                        widget.config(**attrs)
+                    except tk.TclError:
+                        pass  # Widget was destroyed, skip it
+            
+            # Clear processed updates
+            loop.pending_widget_updates.clear()
+        
+        # Process slider value updates
+        if hasattr(loop, 'pending_slider_values') and loop.pending_slider_values:
+            for slider_key, value in list(loop.pending_slider_values.items()):
+                if slider_key in dict_sliders:
+                    try:
+                        current_widget_value = dict_sliders[slider_key].get()
+                        tracked_value = loop.slider_current_values.get(slider_key, current_widget_value)
+                        if current_widget_value == tracked_value:
+                            # No manual change, apply the queued update
+                            dict_sliders[slider_key].set(value)
+                            loop.slider_current_values[slider_key] = value
+                        else:
+                            # Manual change detected, update tracking to current widget value instead
+                            loop.slider_current_values[slider_key] = current_widget_value
+                    except tk.TclError:
+                        pass  # Widget was destroyed, skip it
+            
+            # Clear processed updates
+            loop.pending_slider_values.clear()
+        
+        # Schedule next update as fast as possible (1ms)
+        ls_root[0].after(1, update_widgets)
+    
+    # Start the widget update handler
+    update_widgets()
