@@ -40,8 +40,6 @@ def queue_slider_value(slider_key, value):
     Usage: queue_slider_value("Air Flow Rate", 50)
     """
     pending_slider_values[slider_key] = value
-    # Also update the "known" current value for background threads
-    slider_current_values[slider_key] = value
 
 def loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars):
     tween_thread = None

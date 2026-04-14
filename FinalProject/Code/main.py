@@ -142,9 +142,15 @@ def main():
             for slider_key, value in list(loop.pending_slider_values.items()):
                 if slider_key in dict_sliders:
                     try:
-                        dict_sliders[slider_key].set(value)
-                        # Update the tracking dict so background threads know the current value
-                        loop.slider_current_values[slider_key] = value
+                        current_widget_value = dict_sliders[slider_key].get()
+                        tracked_value = loop.slider_current_values.get(slider_key, current_widget_value)
+                        if current_widget_value == tracked_value:
+                            # No manual change, apply the queued update
+                            dict_sliders[slider_key].set(value)
+                            loop.slider_current_values[slider_key] = value
+                        else:
+                            # Manual change detected, update tracking to current widget value instead
+                            loop.slider_current_values[slider_key] = current_widget_value
                     except tk.TclError:
                         pass  # Widget was destroyed, skip it
             

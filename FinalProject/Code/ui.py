@@ -51,7 +51,7 @@ def add_button(name, parent, xpad, ypad, action, dict_buttons):
 
 def add_slider(name, parent, xpad, ypad, dict_sliders):
     print(f"creating slider Widget named: {name} name with parent: {parent} pad x: {xpad} pad y: {ypad}")
-    slider = tk.Scale(parent,from_=0, to=200, orient=tk.HORIZONTAL, label=f"{name}")
+    slider = tk.Scale(parent,from_=0, to=200, orient=tk.HORIZONTAL, label=f"{name}", command=lambda v: loop.slider_current_values.update({name: float(v)}))
     slider.pack(pady=ypad, padx=xpad)
     dict_sliders[name] = slider
     return

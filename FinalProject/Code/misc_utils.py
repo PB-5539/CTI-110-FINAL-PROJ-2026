@@ -83,11 +83,15 @@ def tween_slider(slider_key, slider_dict, target):
     """
     import loop
     
-    # Get initial value from loop's tracking dict, not from widget
-    current_value = loop.slider_current_values.get(slider_key, 100)  # Default to 100 if not tracked
     epoch = 0
     
-    while (current_value != target) and (not(epoch > 100)):
+    while epoch <= 100:
+        # Re-read current value each iteration to respect manual changes
+        current_value = loop.slider_current_values.get(slider_key, 100)
+        
+        if current_value == target:
+            break  # Reached target
+        
         epoch += 1
         
         if current_value < target:
