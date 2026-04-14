@@ -5,10 +5,12 @@
 
 #----import python modules
 import random as rdm
+import tkinter as tk
 #----import internal modules
 import ui
 import misc_utils as misc
 import pseudo_terminal as pt
+import loop
 
 #----Main function
 def main():
@@ -93,6 +95,67 @@ def main():
     #make an audio thread / play audio during cycles and have the cycle end when the music ends for variable cycle lengths
     #add day cycle using time and random modules
     #add a day counter and cycle tracker (time untill next cycle/day and how many cycles have passed)
+
+    #----Thread-safe widget update handler
+    update_counter = 0
+    
+    # Initialize slider tracking for background threads
+    for slider_key in dict_sliders.keys():
+        try:
+            loop.slider_current_values[slider_key] = dict_sliders[slider_key].get()
+        except:
+            loop.slider_current_values[slider_key] = 100
+    
+    def update_widgets():
+        """Process all queued widget updates on the main tkinter thread.
+        This runs as fast as possible (1ms) to apply changes from background threads safely.
+        """
+        nonlocal update_counter
+        update_counter += 1
+        
+        # Process widget config updates
+        if loop.pending_widget_updates:
+            for widget_key, attrs in list(loop.pending_widget_updates.items()):
+                # Find the widget in the dictionaries
+                widget = None
+                if widget_key in dict_labels:
+                    widget = dict_labels[widget_key]
+                elif widget_key in dict_buttons:
+                    widget = dict_buttons[widget_key]
+                elif widget_key in dict_sliders:
+                    widget = dict_sliders[widget_key]
+                elif widget_key in dict_frames:
+                    widget = dict_frames[widget_key]
+                
+                # Apply the update SAFELY on main thread
+                if widget:
+                    try:
+                        widget.config(**attrs)
+                    except tk.TclError:
+                        pass  # Widget was destroyed, skip it
+            
+            # Clear processed updates
+            loop.pending_widget_updates.clear()
+        
+        # Process slider value updates
+        if hasattr(loop, 'pending_slider_values') and loop.pending_slider_values:
+            for slider_key, value in list(loop.pending_slider_values.items()):
+                if slider_key in dict_sliders:
+                    try:
+                        dict_sliders[slider_key].set(value)
+                        # Update the tracking dict so background threads know the current value
+                        loop.slider_current_values[slider_key] = value
+                    except tk.TclError:
+                        pass  # Widget was destroyed, skip it
+            
+            # Clear processed updates
+            loop.pending_slider_values.clear()
+        
+        # Schedule next update as fast as possible (1ms)
+        ls_root[0].after(1, update_widgets)
+    
+    # Start the widget update handler
+    update_widgets()
 
     #run
     ls_root[2].protocol("WM_DELETE_WINDOW", lambda: ui.quitgame(ls_root[0]))
