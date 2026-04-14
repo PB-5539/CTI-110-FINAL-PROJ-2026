@@ -78,7 +78,7 @@ def main():
     ui.add_slider("Air Flow Rate", dict_frames["top left"], 20, 20, dict_sliders)
     dict_sliders["Air Flow Rate"].set(100)
 
-    ui.add_slider("Oxygen Flow rate", dict_frames["top middle"], 20, 20, dict_sliders)
+    ui.add_slider("Oxygen Flow rate", dict_frames["top middle"], 20, 20, dict_sliders) #keep in a ox/hy ratio of 5:1 for the engines.
     dict_sliders["Oxygen Flow rate"].set(100)
     ui.add_slider("Hydrogen Flow Rate", dict_frames["top middle"], 20, 20, dict_sliders)
     dict_sliders["Hydrogen Flow Rate"].set(100)
