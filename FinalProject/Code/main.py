@@ -70,12 +70,12 @@ def main():
     ui.add_label("game window label", dict_frames["main frame"], 20, 20, f"------------------", dict_labels, "None", "None", "grey")
     ui.add_button("terminal", dict_frames["main frame"], 20, 20, lambda: pt.show(ls_root, ls_terminal, dict_frames), dict_buttons)
 
-    ui.add_frame("top left", dict_frames["main frame"], 1, 1, dict_frames, "left", "None", "light grey", "both")
-    ui.add_label("Life Support Systems", dict_frames["top left"], 20, 20, "Life Support Systems", dict_labels, "none", "none", "light grey")
+    ui.add_frame("top left", dict_frames["main frame"], 1, 1, dict_frames, "left", "None", "silver", "both")
+    ui.add_label("Life Support Systems", dict_frames["top left"], 20, 20, "Life Support Systems", dict_labels, "none", "none", "silver")
     ui.add_frame("top middle", dict_frames["main frame"], 1, 1, dict_frames, "left", "None", "light grey", "both")
     ui.add_label("Propulsion Systems", dict_frames["top middle"], 20, 20, "Propulsion Systems", dict_labels, "none", "none", "light grey")
-    ui.add_frame("top right", dict_frames["main frame"], 1, 1, dict_frames, "left", "None", "light grey", "both")
-    ui.add_label("Structural Systems", dict_frames["top right"], 20, 20, "Structural Systems", dict_labels, "none", "none", "light grey")
+    ui.add_frame("top right", dict_frames["main frame"], 1, 1, dict_frames, "left", "None", "silver", "both")
+    ui.add_label("Structural Systems", dict_frames["top right"], 20, 20, "Structural Systems", dict_labels, "none", "none", "silver")
 
     ui.add_slider("Air Flow Rate", dict_frames["top left"], 20, 20, dict_sliders)
     dict_sliders["Air Flow Rate"].set(100)
@@ -87,14 +87,8 @@ def main():
 
     ui.add_label("Pressure", dict_frames["top right"], 20, 20, "Pressure", dict_labels, "none", "none", "light grey")
     ui.add_button("Pressure relief valve", dict_frames["top right"], 20, 20, lambda: misc.open_prerelval(dict_vars), dict_buttons)
-    
-    #ui.add_label("cycle length")
-    #au.play_audio("MainMenu.wav")
 
-    #TO DO:
-    #make an audio thread / play audio during cycles and have the cycle end when the music ends for variable cycle lengths
-    #add day cycle using time and random modules
-    #add a day counter and cycle tracker (time untill next cycle/day and how many cycles have passed)
+#-------------------------------------------------------------------------AI----------------------------------------------------------------
 
     #----Thread-safe widget update handler
     update_counter = 0
@@ -162,6 +156,8 @@ def main():
     
     # Start the widget update handler
     update_widgets()
+#-------------------------------------------------------------------------------------------------------------------------------------------
+
 
     #run
     ls_root[2].protocol("WM_DELETE_WINDOW", lambda: ui.quitgame(ls_root[0]))
