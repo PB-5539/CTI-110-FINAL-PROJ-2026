@@ -7,8 +7,10 @@ import alerts as als
 import misc_utils as msc
 import loop
 import pseudo_terminal as pt
+import pyglet
 #-------------Create Main Windows------------
 def create_main_ui(name, geometry, resizeable, ls_root, ls_terminal, ls_frame_windows, dict_frames):
+    pyglet.font.add_file("finalproject/fonts/DSEG7Modern-Bold.ttf")
     print(f"creating Main Ui element named: {name} with geometry: {geometry}")
     root = tk.Tk()
     root.title(name)
@@ -58,7 +60,7 @@ def add_slider(name, parent, xpad, ypad, dict_sliders):
 
 def add_label(name, parent, xpad, ypad, text, dict_labels, LorR, TorB, backg):
     print(f"creating label Widget named: {name} name with parent: {parent} pad x: {xpad} pad y: {ypad} and text: {text}")
-    label = tk.Label(parent, text=text, bg=backg)
+    label = tk.Label(parent, text=text, bg=backg, font=("DSEG7 Modern Bold", 12))
     if LorR.lower() == "left":
         print("LEFT")
         label.pack(pady=ypad, padx=xpad, side=tk.LEFT)

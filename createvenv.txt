@@ -1,0 +1,2 @@
+#cd to root folder
+python -m venv .

@@ -6,6 +6,7 @@
 #----import python modules
 import random as rdm
 import tkinter as tk
+import pygame as pg
 #----import internal modules
 import ui
 import misc_utils as misc
@@ -14,6 +15,7 @@ import loop
 
 #----Main function
 def main():
+    pg.init()
     #----initialize variables
     #mutable variables are stored within a dictionary for a more easy way to transfer between threads using dict_vars["variable name"] to get the variable rather than passing through all the variables through the loop.begin_loop(...) function
     dict_vars = {"days":0, "current_cycle":0, "structural_integrity":0, "life_support_system_integrity":0, "temperature_C":0, "temperature_F":0}
