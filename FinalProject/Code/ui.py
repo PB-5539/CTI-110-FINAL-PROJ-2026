@@ -10,7 +10,6 @@ import pseudo_terminal as pt
 import pyglet
 #-------------Create Main Windows------------
 def create_main_ui(name, geometry, resizeable, ls_root, ls_terminal, ls_frame_windows, dict_frames):
-    pyglet.font.add_file("finalproject/fonts/DSEG7Modern-Bold.ttf")
     print(f"creating Main Ui element named: {name} with geometry: {geometry}")
     root = tk.Tk()
     root.title(name)
@@ -44,10 +43,28 @@ def create_main_ui(name, geometry, resizeable, ls_root, ls_terminal, ls_frame_wi
 
 #-------------Create Other Widgets------------
 
-def add_button(name, parent, xpad, ypad, action, dict_buttons):
+def add_button(name, parent, xpad, ypad, action, LorR, fill, dict_buttons):
     print(f"creating Button Widget named: {name} name with parent: {parent} pad x: {xpad} pad y: {ypad} and action: {action}")
     button = tk.Button(parent, text=name, command=action)
-    button.pack(pady=ypad, padx=xpad)
+    if LorR.lower() == "left":
+        print("LEFT")
+        button.pack(pady=ypad, padx=xpad, side=tk.LEFT)
+    elif LorR.lower() == "right":
+        print("RIGHT")
+        button.pack(pady=ypad, padx=xpad, side=tk.RIGHT)
+    else:
+        print("none")
+    if fill.lower() == "x":
+        print("fill X")
+        button.pack_configure(pady=ypad, padx=xpad,fill=tk.X,expand=True)
+    elif fill.lower() == "y":
+        print("fill Y")
+        button.pack_configure(pady=ypad, padx=xpad,fill=tk.Y)
+    elif fill.lower() == "both":
+        print ("fill both")
+        button.pack_configure(pady=ypad, padx=xpad,fill=tk.BOTH,expand=True)
+    else:
+        button.pack_configure(pady=ypad, padx=xpad)
     dict_buttons[name] = button
     return
 
@@ -60,7 +77,7 @@ def add_slider(name, parent, xpad, ypad, dict_sliders):
 
 def add_label(name, parent, xpad, ypad, text, dict_labels, LorR, TorB, backg):
     print(f"creating label Widget named: {name} name with parent: {parent} pad x: {xpad} pad y: {ypad} and text: {text}")
-    label = tk.Label(parent, text=text, bg=backg, font=("DSEG7 Modern Bold", 12))
+    label = tk.Label(parent, text=text, bg=backg)
     if LorR.lower() == "left":
         print("LEFT")
         label.pack(pady=ypad, padx=xpad, side=tk.LEFT)
