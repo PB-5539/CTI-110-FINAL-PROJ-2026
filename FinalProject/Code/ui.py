@@ -7,7 +7,6 @@ import alerts as als
 import misc_utils as msc
 import loop
 import pseudo_terminal as pt
-import pyglet
 #-------------Create Main Windows------------
 def create_main_ui(name, geometry, resizeable, ls_root, ls_terminal, ls_frame_windows, dict_frames):
     print(f"creating Main Ui element named: {name} with geometry: {geometry}")
