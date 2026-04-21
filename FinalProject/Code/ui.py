@@ -42,75 +42,104 @@ def create_main_ui(name, geometry, resizeable, ls_root, ls_terminal, ls_frame_wi
 
 #-------------Create Other Widgets------------
 
-def add_button(name, parent, xpad, ypad, action, LorR, fill, dict_buttons):
+def _anchor_from_sticky(sticky):
+    sticky = str(sticky).lower().strip()
+    if sticky in {"n", "s", "e", "w", "ne", "nw", "se", "sw", "nsew", "ns", "ew", "c", "center"}:
+        return "center" if sticky == "center" else sticky
+    return None
+
+
+def add_button(name, parent, xpad, ypad, action, LorR, fill, sticky="none", dict_buttons=None):
     print(f"creating Button Widget named: {name} name with parent: {parent} pad x: {xpad} pad y: {ypad} and action: {action}")
     button = tk.Button(parent, text=name, command=action)
+    anchor = _anchor_from_sticky(sticky)
+    pack_kwargs = {"pady": ypad, "padx": xpad}
+    if anchor:
+        pack_kwargs["anchor"] = anchor
+
     if LorR.lower() == "left":
         print("LEFT")
-        button.pack(pady=ypad, padx=xpad, side=tk.LEFT)
+        pack_kwargs["side"] = tk.LEFT
     elif LorR.lower() == "right":
         print("RIGHT")
-        button.pack(pady=ypad, padx=xpad, side=tk.RIGHT)
+        pack_kwargs["side"] = tk.RIGHT
     else:
         print("none")
+
+    button.pack(**pack_kwargs)
     if fill.lower() == "x":
         print("fill X")
-        button.pack_configure(pady=ypad, padx=xpad,fill=tk.X,expand=True)
+        button.pack_configure(fill=tk.X, expand=True)
     elif fill.lower() == "y":
         print("fill Y")
-        button.pack_configure(pady=ypad, padx=xpad,fill=tk.Y)
+        button.pack_configure(fill=tk.Y)
     elif fill.lower() == "both":
         print ("fill both")
-        button.pack_configure(pady=ypad, padx=xpad,fill=tk.BOTH,expand=True)
+        button.pack_configure(fill=tk.BOTH, expand=True)
     else:
-        button.pack_configure(pady=ypad, padx=xpad)
+        button.pack_configure()
     dict_buttons[name] = button
     return
 
-def add_slider(name, parent, xpad, ypad, dict_sliders):
+def add_slider(name, parent, xpad, ypad, dict_sliders, sticky="none"):
     print(f"creating slider Widget named: {name} name with parent: {parent} pad x: {xpad} pad y: {ypad}")
     slider = tk.Scale(parent,from_=0, to=200, orient=tk.HORIZONTAL, label=f"{name}", command=lambda v: loop.slider_current_values.update({name: float(v)}))
-    slider.pack(pady=ypad, padx=xpad)
+    anchor = _anchor_from_sticky(sticky)
+    pack_kwargs = {"pady": ypad, "padx": xpad}
+    if anchor:
+        pack_kwargs["anchor"] = anchor
+    slider.pack(**pack_kwargs)
     dict_sliders[name] = slider
     return
 
-def add_label(name, parent, xpad, ypad, text, dict_labels, LorR, TorB, backg):
+def add_label(name, parent, xpad, ypad, text, dict_labels, LorR, TorB, backg, sticky="none"):
     print(f"creating label Widget named: {name} name with parent: {parent} pad x: {xpad} pad y: {ypad} and text: {text}")
     label = tk.Label(parent, text=text, bg=backg)
+    anchor = _anchor_from_sticky(sticky)
+    pack_kwargs = {"pady": ypad, "padx": xpad}
+    if anchor:
+        pack_kwargs["anchor"] = anchor
     if LorR.lower() == "left":
         print("LEFT")
-        label.pack(pady=ypad, padx=xpad, side=tk.LEFT)
+        pack_kwargs["side"] = tk.LEFT
     elif LorR.lower() == "right":
         print("RIGHT")
-        label.pack(pady=ypad, padx=xpad, side=tk.RIGHT)
+        pack_kwargs["side"] = tk.RIGHT
     else:
         print("none")
-        label.pack(pady=ypad, padx=xpad,)
+
+    label.pack(**pack_kwargs)
     dict_labels[name] = label
     return
 
-def add_frame(name, parent, xpad, ypad, dict_frames, LorR, TorB, backg, fill):
+def add_frame(name, parent, xpad, ypad, dict_frames, LorR, TorB, backg, fill, sticky="none"):
     print(f"creating frame Widget named: {name} name with parent: {parent} pad x: {xpad} pad y: {ypad}")
     frame = tk.Frame(parent, bg=backg)
+    anchor = _anchor_from_sticky(sticky)
+    pack_kwargs = {"pady": ypad, "padx": xpad}
+    if anchor:
+        pack_kwargs["anchor"] = anchor
     if LorR.lower() == "left":
         print("LEFT")
-        frame.pack(pady=ypad, padx=xpad, side=tk.LEFT)
+        pack_kwargs["side"] = tk.LEFT
     elif LorR.lower() == "right":
         print("RIGHT")
-        frame.pack(pady=ypad, padx=xpad, side=tk.RIGHT)
+        pack_kwargs["side"] = tk.RIGHT
     else:
         print("none")
+
+    frame.pack(**pack_kwargs)
     if fill.lower() == "x":
         print("fill X")
-        frame.pack_configure(pady=ypad, padx=xpad,fill=tk.X,expand=True)
+        frame.pack_configure(fill=tk.X, expand=True)
     elif fill.lower() == "y":
         print("fill Y")
-        frame.pack_configure(pady=ypad, padx=xpad,fill=tk.Y)
+        frame.pack_configure(fill=tk.Y)
     elif fill.lower() == "both":
         print ("fill both")
-        frame.pack_configure(pady=ypad, padx=xpad,fill=tk.BOTH,expand=True)
+        frame.pack_configure(fill=tk.BOTH, expand=True)
     else:
-        frame.pack_configure(pady=ypad, padx=xpad)
+        frame.pack_configure()
     dict_frames[name] = frame
     return
 
