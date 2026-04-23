@@ -10,8 +10,38 @@ import winsound as ws
 import tkinter as tk
 from tkinter import ttk
 
-def start_terminal(ls_terminal, ls_root, dict_frames):
-    ls_commands = ["hello","help","exit", "nuke", "pseudo", "clear"] #pseudo will have a similar function to sudo with the pseudo-terminal because funnies lol
+def start_terminal(ls_terminal, ls_root, dict_frames, dict_vars):
+    ls_commands = ["hello","help","exit", "nuke", "pseudo", "clear", "sys_status.exe", "top"] #pseudo will have a similar function to sudo with the pseudo-terminal because funnies lol
+    top_mode = {"active": False}
+
+    def refresh_top():
+        text_area.config(state=tk.NORMAL)
+        text_area.delete(1.0, tk.END)
+        text_area.insert(tk.END, "TOP - press Enter to refresh, Ctrl+C to exit top mode\n")
+        text_area.insert(tk.END, "-------------------------------------------\n")
+        for key, value in dict_vars.items():
+            text_area.insert(tk.END, f"{key}: {value}\n")
+        text_area.see(tk.END)
+        text_area.config(state=tk.DISABLED)
+
+    def exit_top(event=None):
+        if not top_mode["active"]:
+            return
+        top_mode["active"] = False
+        text_area.config(state=tk.NORMAL)
+        text_area.delete(1.0, tk.END)
+        text_area.config(state=tk.DISABLED)
+        entry.pack(pady=1, fill=tk.X, expand=True)
+        entry.focus()
+        terminal.unbind("<Return>")
+        text_area.unbind("<Return>")
+        terminal.unbind("<Control-c>")
+        text_area.unbind("<Control-c>")
+        text_area.config(state=tk.NORMAL)
+        text_area.insert(tk.END, "Exited top mode.\n")
+        text_area.config(state=tk.DISABLED)
+        text_area.see(tk.END)
+
     def handle_command(command):
         ls_hi = ["Hi!","Hello!","Greetings!","Welcome!","G'day Mate!", "Hey!", "How's Existence?" ]
         command = command.strip().lower()
@@ -35,10 +65,28 @@ def start_terminal(ls_terminal, ls_root, dict_frames):
         elif command == ls_commands[3]:
             ui.quitgame(ls_root[0])
             return command
+        elif command == "sys_status.exe":
+            lines = []
+            for key in ["structural_integrity", "life_support_system_integrity", "propulsion_system_integrity"]:
+                if key in dict_vars:
+                    lines.append(f"{key}: {dict_vars[key]}")
+            return "\n".join(lines)
+        elif command == "top":
+            top_mode["active"] = True
+            entry.pack_forget()
+            refresh_top()
+            terminal.bind("<Return>", lambda event: (refresh_top(), "break"))
+            text_area.bind("<Return>", lambda event: (refresh_top(), "break"))
+            terminal.bind("<Control-c>", lambda event: (exit_top(event), "break"))
+            text_area.bind("<Control-c>", lambda event: (exit_top(event), "break"))
+            return ""
         else:
             return f"{command} : The term '{command}' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the spelling of the name, or if a path was included, verify that the path is correct and try again."
 
     def on_enter(event=None):
+        if top_mode["active"]:
+            refresh_top()
+            return
         text_area.config(state=tk.NORMAL)
         cmd = entry.get()
         text_area.insert(tk.END, f"> {cmd}\n")
@@ -85,12 +133,12 @@ def startup(ls_terminal):
         ls_terminal.insert(tk.END, f'Welcome To EvrenOS, type "help" for a list of commands.\n')  
         ls_terminal.config(state=tk.DISABLED)  
 
-def show(ls_root, ls_terminal, dict_frames):
+def show(ls_root, ls_terminal, dict_frames, dict_vars):
     print(ls_root[3].winfo_exists())
     if ls_root[3].winfo_exists():
         ls_root[3].place(x=80, y=80, width=650, height=500)
     else:
-        start_terminal(ls_terminal, ls_root, dict_frames)
+        start_terminal(ls_terminal, ls_root, dict_frames, dict_vars)
         startup(ls_terminal[0])
         
 def hide(ls_root):

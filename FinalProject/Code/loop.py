@@ -63,6 +63,7 @@ def loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_fram
         life_support_system_integrity = dict_vars["life_support_system_integrity"]
         temperature_C = dict_vars["temperature_C"]
         temperature_F = dict_vars["temperature_F"]
+        oxy_err = dict_vars["oxy_err"]
         iteration_count += 1
         
         # Only print every 100 iterations to reduce output
@@ -76,14 +77,25 @@ def loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_fram
             tween_thread = th.Thread(target=misc.tween_slider, args=("Air Flow Rate", dict_sliders, rdm.randrange(5,185)), daemon=True)
             tween_thread.start()
             ls_threads.append(tween_thread)
+        if not(dict_sliders["Air Flow Rate"].get() > 60 and dict_sliders["Air Flow Rate"].get() < 130):
+            if life_support_system_integrity > 5000:
+                als.send_alert("Oxygen levels dropping!", 2, True, dict_text_areas, "alerts")
+            elif life_support_system_integrity <= 5000:
+                als.send_alert("Oxygen levels critical!", 3, True, dict_text_areas, "alerts")
+            else:
+                als.send_alert("Oxygen levels stable.", 1, False, dict_text_areas, "alerts")
+            oxy_err = True
+        else:
+            oxy_err = False
         #goal is to keep it within the range of 60-130 and not let it be out of that range for more than 60 seconds and not at any extreme values (<15 and >185) for more than 25 seconds, if it is then the life support system integrity will decrease by 10 points every 2.5 seconds until it is back in the safe range, if it reaches 0  then the game is over
-        #each day a percentage of the remaining integrity of each item will be repaired.    
+        #each day a percentage of the remaining integrity of each item will be repaired.
         
         #write mutable variable dictionary for reading in the main thread
         dict_vars["structural_integrity"] = structural_integrity
         dict_vars["life_support_system_integrity"] = life_support_system_integrity
         dict_vars["temperature_C"] = temperature_C
         dict_vars["temperature_F"] = temperature_F
+        dict_vars["oxy_err"] = oxy_err
         #Main Game logic---------------------/\
 
 def begin_loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars, dict_text_areas):

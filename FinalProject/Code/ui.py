@@ -81,9 +81,10 @@ def add_button(name, parent, xpad, ypad, action, LorR, fill, sticky="none", dict
     dict_buttons[name] = button
     return
 
-def add_slider(name, parent, xpad, ypad, dict_sliders, sticky="none"):
+def add_slider(name, parent, xpad, ypad, dict_sliders, start_value=0, sticky="none"):
     print(f"creating slider Widget named: {name} name with parent: {parent} pad x: {xpad} pad y: {ypad}")
     slider = tk.Scale(parent,from_=0, to=200, orient=tk.HORIZONTAL, label=f"{name}", command=lambda v: loop.slider_current_values.update({name: float(v)}))
+    slider.set(start_value)
     anchor = _anchor_from_sticky(sticky)
     pack_kwargs = {"pady": ypad, "padx": xpad}
     if anchor:

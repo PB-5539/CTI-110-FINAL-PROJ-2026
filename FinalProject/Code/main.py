@@ -12,6 +12,7 @@ import ui
 import misc_utils as misc
 import pseudo_terminal as pt
 import loop
+import alerts as als
 
 #----Main function
 def main():
@@ -22,9 +23,9 @@ def main():
     dict_vars["current_cycle"] = 0
     dict_vars["current_cycle_week"] = 1
     dict_vars["current_cycle_tday"] = 0
-    dict_vars["structural_integrity"] = 1000
-    dict_vars["life_support_system_integrity"] = 1000
-    dict_vars["propulsion_system_integrity"] = 1000
+    dict_vars["structural_integrity"] = 10000
+    dict_vars["life_support_system_integrity"] = 10000
+    dict_vars["propulsion_system_integrity"] = 10000
     dict_vars["temperature_C"] = 0
     dict_vars["temperature_F"] = 32
     dict_vars["fun_value"] = rdm.randrange(0,100)
@@ -46,6 +47,10 @@ def main():
     dict_text_areas = {}
 
 
+
+
+
+
     ui.create_main_ui("main window", "1920x1080", True, ls_root, ls_terminal, ls_frame_windows, dict_frames)
     print(ls_root)
     print("game now loading...")
@@ -54,7 +59,7 @@ def main():
     ui.add_frame("game window", ls_root[2], 1, 1, dict_frames, "left", "None", "black", "Both", "none")
     ui.add_frame("sidebar", dict_frames["game window"], 1, 1, dict_frames, "left", "None", "grey", "y", "none")
     ui.add_frame("main frame", dict_frames["game window"], 1, 1, dict_frames, "left", "none", "grey", "both", "none")
-    pt.start_terminal(ls_terminal, ls_root, dict_frames)
+    pt.start_terminal(ls_terminal, ls_root, dict_frames, dict_vars)
     pt.startup(ls_terminal[0])
 
     pt.hide(ls_root[3])
@@ -68,8 +73,8 @@ def main():
     ui.add_label("sidebar title", dict_frames["sidebar"], 20, 20, "sidebar!",  dict_labels, "none", "None", "light grey", "none", "none")
     ui.add_label("day counter", dict_frames["sidebar"], 20, 20, "", dict_labels, "none", "none", "light grey", "none", "none")
     ui.add_label("timer", dict_frames["sidebar"], 20, 20, "", dict_labels, "none", "none", "light grey", "none", "none")
-    ui.add_text_area("alerts", dict_frames["sidebar"], 20, 20, dict_text_areas, "none", "light grey", "y", 30, None, False, "none")
-    ui.add_button("Guide", dict_frames["sidebar"], 20, 120, lambda: ui.guidebook(ls_frame_windows, dict_frames),"none","none","none", dict_buttons)
+    ui.add_text_area("alerts", dict_frames["sidebar"], 20, 20, dict_text_areas, "none", "light grey", "none", 30, 40, False, "none")
+    ui.add_button("Guide", dict_frames["sidebar"], 20, 20, lambda: ui.guidebook(ls_frame_windows, dict_frames),"none","none","none", dict_buttons)
 
     ui.add_label("game window label", dict_frames["main frame"], 20, 20, f"------------------", dict_labels, "None", "None", "grey", "none", "none")
     ui.add_button("terminal", dict_frames["main frame"], 20, 20, lambda: pt.show(ls_root, ls_terminal, dict_frames),"none","none","none", dict_buttons)
@@ -86,7 +91,7 @@ def main():
     ui.add_frame("Left-sub-1", dict_frames["top left"], 1, 1, dict_frames, "none", "None", "silver", "none", "none")
     ui.add_button("Change Air Filter", dict_frames["Left-sub-1"], 1, 1,lambda: print("Changing air filter"),"Left","none","none", dict_buttons)
     ui.add_label("filter timer", dict_frames["Left-sub-1"], 3, 1, "10", dict_labels, "Left", "none", "white", "none", "none")
-    ui.add_slider("Air Flow Rate", dict_frames["top left"], 20, 20, dict_sliders, "none")
+    ui.add_slider("Air Flow Rate", dict_frames["top left"], 20, 20, dict_sliders, 100, "none")
     
     
     
@@ -101,11 +106,14 @@ def main():
     
     ui.add_frame("Left-sub-2", dict_frames["left-sub-3"], 1, 1, dict_frames, "none", "None", "silver", "none", "none")
     ui.add_frame("sub-2-sub-1", dict_frames["Left-sub-2"], 20, 1, dict_frames, "none", "None", "light grey", "x", "none")
-    ui.add_button("Air Conditioner", dict_frames["sub-2-sub-1"], 20, 1,lambda: print("AC toggle"),"Left","none","none", dict_buttons)
+    ui.add_button("Air Conditioner", dict_frames["sub-2-sub-1"], 20, 1,lambda: AC_visual_logic(dict_labels),"Left","none","none", dict_buttons)
     ui.add_label("AC state", dict_frames["sub-2-sub-1"], 20, 20, "Off", dict_labels, "none", "none", "silver", "none", "none")
     ui.add_frame("sub-2-sub-2", dict_frames["Left-sub-2"], 20, 1, dict_frames, "none", "none", "light grey", "x", "none")
-    ui.add_button("Heat", dict_frames["sub-2-sub-2"], 20, 1,lambda: print("heat toggle"),"Left","x","none", dict_buttons)
-    ui.add_label("Structural Systems", dict_frames["sub-2-sub-2"], 20, 20, "Off", dict_labels, "none", "none", "silver", "none", "none")
+    ui.add_button("Heat", dict_frames["sub-2-sub-2"], 20, 1,lambda: Heat_visual_logic(dict_labels),"Left","x","none", dict_buttons)
+    ui.add_label("Heat state", dict_frames["sub-2-sub-2"], 20, 20, "Off", dict_labels, "none", "none", "silver", "none", "none")
+
+
+
 #------------------------------------------------------------------------------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------Propulsion Systems------------------------------------------------------------
@@ -192,5 +200,23 @@ def main():
     #run
     ls_root[2].protocol("WM_DELETE_WINDOW", lambda: ui.quitgame(ls_root[0]))
     ui.run(ls_root[0]) #THIS GOES AT THE END OF THE MAIN FUNCTION, ALL CODE AFTER IT WILL NOT RUN UNTILL THE WINDOWS HAVE EITHER BEEN CLOSED BY THE USER OR DESTROYRD VIA '<object name>.Destroy()'
+
+def AC_visual_logic(dict_labels):
+    if dict_labels["Heat state"].cget("text") == "On":
+        dict_labels["Heat state"].config(text="Off", bg="silver")
+    if dict_labels["AC state"].cget("text") == "Off":
+        dict_labels["AC state"].config(text="On", bg="light blue")
+    else:
+        dict_labels["AC state"].config(text="Off", bg="silver")
+
+def Heat_visual_logic(dict_labels):
+    if dict_labels["AC state"].cget("text") == "On":
+        dict_labels["AC state"].config(text="Off", bg="silver")
+    if dict_labels["Heat state"].cget("text") == "Off":
+        dict_labels["Heat state"].config(text="On", bg="orange")
+    else:
+        dict_labels["Heat state"].config(text="Off", bg="silver")
+
+
 #run game
 main()
