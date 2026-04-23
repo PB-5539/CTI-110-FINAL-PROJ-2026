@@ -15,6 +15,11 @@ import tasks as tsk
 import alerts as als
 import pseudo_terminal as pt
 
+
+
+
+
+#-----------------------------------------------------------------------ai----------------------------------------------------------------------------
 #----Thread-safe print lock
 print_lock = th.Lock()
 
@@ -29,7 +34,7 @@ pending_slider_values = {}
 slider_current_values = {}  # Track slider values for background threads
 
 def queue_config(widget_key, **kwargs):
-    """Queue a widget config change (thread-safe). 
+    """Queue a widget config change (thread-safe).
     Usage: queue_config("widget_name", text="new text", bg="red")
     """
     if widget_key not in pending_widget_updates:
@@ -41,20 +46,16 @@ def queue_slider_value(slider_key, value):
     Usage: queue_slider_value("Air Flow Rate", 50)
     """
     pending_slider_values[slider_key] = value
+#-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-def loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars):
+
+
+
+def loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars, dict_text_areas):
     tween_thread = None
     iteration_count = 0
     
     while True:
-        iteration_count += 1
-        
-        # Only print every 100 iterations to reduce output
-        if iteration_count % 100 == 0:
-            safe_print(f"[GAME LOOP] Iteration {iteration_count}")
-        
-        #Main Game Logic---------------------\/
-        dict_vars["p_valve"] = False
         #read all variables and write to local variables
         days = dict_vars["days"]
         current_cycle = dict_vars["current_cycle"]
@@ -62,6 +63,14 @@ def loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_fram
         life_support_system_integrity = dict_vars["life_support_system_integrity"]
         temperature_C = dict_vars["temperature_C"]
         temperature_F = dict_vars["temperature_F"]
+        iteration_count += 1
+        
+        # Only print every 100 iterations to reduce output
+        if iteration_count % 100 == 0:
+            safe_print(f"[GAME LOOP] Iteration {iteration_count}")
+        
+        #Main Game Logic---------------------\/
+        
         
         if tween_thread is None or not tween_thread.is_alive():
             tween_thread = th.Thread(target=misc.tween_slider, args=("Air Flow Rate", dict_sliders, rdm.randrange(5,185)), daemon=True)
@@ -77,13 +86,13 @@ def loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_fram
         dict_vars["temperature_F"] = temperature_F
         #Main Game logic---------------------/\
 
-def begin_loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars):
-    thread = th.Thread(target=loop, args=(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars),  daemon=True)
+def begin_loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars, dict_text_areas):
+    thread = th.Thread(target=loop, args=(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars, dict_text_areas),  daemon=True)
     thread.start()
     ls_threads.append(thread)
     return thread
 
-def day_loop(ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars):
+def day_loop(ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars, dict_text_areas):
     # NOTE: Removed problematic print of all shared objects - was causing deadlock
     # print("day loop ran", ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars)
     safe_print("[DAY LOOP] Starting day cycle...")
@@ -108,7 +117,7 @@ def day_loop(ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict
             queue_config("day counter", text=str(f"Day {day} (Tutorial)"))
             au.play_audio("TutorialTheme.wav")
             for i in range(int(f"{misc.get_duration("TutorialTheme.wav"):.0f}")):
-                # Removed individual print - too many prints causing deadlock
+
                 queue_config("timer", text=f"{int(misc.get_duration("TutorialTheme.wav") - (i))} seconds until Day {tomorrow}")
                 queue_config("sidebar title", text=f"{tm.ctime()}")
                 tm.sleep(1)
@@ -122,7 +131,7 @@ def day_loop(ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict
             queue_config("day counter", text=str(f"Day: {day} Week: {week}"))
             au.play_audio(f"Theme{day}.wav")
             for i in range(int(f"{misc.get_duration(f'Theme{day}.wav'):.0f}")):
-                # Removed individual print - too many prints causing deadlock
+
                 queue_config("timer", text=f"{int(misc.get_duration(f'Theme{day}.wav') - (i))} seconds until Day {tomorrow}")
                 queue_config("sidebar title", text=f"{tm.ctime()}")
                 tm.sleep(1)
@@ -138,8 +147,8 @@ def day_loop(ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict
         dict_vars["current_cycle_tday"] = true_day
     #MAIN DAY CYCLE TIMING LOGIC ----------/\
 
-def begin_day_loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars):
-    thread = th.Thread(target=day_loop, args=(ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars),  daemon=True)
+def begin_day_loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars, dict_text_areas):
+    thread = th.Thread(target=day_loop, args=(ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars, dict_text_areas),  daemon=True)
     thread.start()
     ls_threads.append(thread)
     return thread

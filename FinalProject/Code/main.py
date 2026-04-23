@@ -43,6 +43,8 @@ def main():
     dict_labels = {}
     dict_entries = {}
     dict_frames = {}
+    dict_text_areas = {}
+
 
     ui.create_main_ui("main window", "1920x1080", True, ls_root, ls_terminal, ls_frame_windows, dict_frames)
     print(ls_root)
@@ -59,32 +61,60 @@ def main():
     ui.hide(ls_root[2])
     ui.hide(ls_root[1])
 
-    ui.add_button("play", ls_root[0], 20, 20, lambda: ui.play(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars),"none","none","none", dict_buttons)
+    ui.add_button("play", ls_root[0], 20, 20, lambda: ui.play(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars, dict_text_areas),"none","none","none", dict_buttons)
     ui.add_button("settings", ls_root[0], 20, 20, lambda: ui.settings(ls_root[1]),"none","none","none", dict_buttons)
     ui.add_button("quit", ls_root[0], 20, 120, lambda: ui.quitgame(ls_root[0]),"none","none","none", dict_buttons)
 
-    ui.add_label("sidebar title", dict_frames["sidebar"], 20, 20, "sidebar!",  dict_labels, "none", "None", "light grey", "none")
-    ui.add_label("day counter", dict_frames["sidebar"], 20, 20, "", dict_labels, "none", "none", "light grey", "none")
-    ui.add_label("timer", dict_frames["sidebar"], 20, 20, "", dict_labels, "none", "none", "light grey", "none")
+    ui.add_label("sidebar title", dict_frames["sidebar"], 20, 20, "sidebar!",  dict_labels, "none", "None", "light grey", "none", "none")
+    ui.add_label("day counter", dict_frames["sidebar"], 20, 20, "", dict_labels, "none", "none", "light grey", "none", "none")
+    ui.add_label("timer", dict_frames["sidebar"], 20, 20, "", dict_labels, "none", "none", "light grey", "none", "none")
+    ui.add_text_area("alerts", dict_frames["sidebar"], 20, 20, dict_text_areas, "none", "light grey", "y", 30, None, False, "none")
     ui.add_button("Guide", dict_frames["sidebar"], 20, 120, lambda: ui.guidebook(ls_frame_windows, dict_frames),"none","none","none", dict_buttons)
 
-    ui.add_label("game window label", dict_frames["main frame"], 20, 20, f"------------------", dict_labels, "None", "None", "grey", "none")
+    ui.add_label("game window label", dict_frames["main frame"], 20, 20, f"------------------", dict_labels, "None", "None", "grey", "none", "none")
     ui.add_button("terminal", dict_frames["main frame"], 20, 20, lambda: pt.show(ls_root, ls_terminal, dict_frames),"none","none","none", dict_buttons)
 
     ui.add_frame("top left", dict_frames["main frame"], 1, 1, dict_frames, "left", "None", "silver", "both", "none")
-    ui.add_label("Life Support Systems", dict_frames["top left"], 20, 20, "Life Support Systems", dict_labels, "none", "none", "silver", "none")
+    ui.add_label("Life Support Systems", dict_frames["top left"], 20, 20, "Life Support Systems", dict_labels, "none", "none", "silver", "none", "none")
     ui.add_frame("top middle", dict_frames["main frame"], 1, 1, dict_frames, "left", "None", "light grey", "both", "none")
-    ui.add_label("Propulsion Systems", dict_frames["top middle"], 20, 20, "Propulsion Systems", dict_labels, "none", "none", "light grey", "none")
+    ui.add_label("Propulsion Systems", dict_frames["top middle"], 20, 20, "Propulsion Systems", dict_labels, "none", "none", "light grey", "none", "none")
     ui.add_frame("top right", dict_frames["main frame"], 1, 1, dict_frames, "left", "None", "silver", "both", "none")
-    ui.add_label("Structural Systems", dict_frames["top right"], 20, 20, "Structural Systems", dict_labels, "none", "none", "silver", "none")
+    ui.add_label("Structural Systems", dict_frames["top right"], 20, 20, "Structural Systems", dict_labels, "none", "none", "silver", "none", "none")
 
-
+#------------------------------------------------------------------------Life Support Systems------------------------------------------------------------
     ui.add_frame("Left-sub-0", dict_frames["top left"], 1, 1, dict_frames, "none", "None", "silver", "none", "none")
     ui.add_frame("Left-sub-1", dict_frames["top left"], 1, 1, dict_frames, "none", "None", "silver", "none", "none")
     ui.add_button("Change Air Filter", dict_frames["Left-sub-1"], 1, 1,lambda: print("Changing air filter"),"Left","none","none", dict_buttons)
-    ui.add_label("filter timer", dict_frames["Left-sub-1"], 3, 1, "10", dict_labels, "Left", "none", "white", "none")
+    ui.add_label("filter timer", dict_frames["Left-sub-1"], 3, 1, "10", dict_labels, "Left", "none", "white", "none", "none")
     ui.add_slider("Air Flow Rate", dict_frames["top left"], 20, 20, dict_sliders, "none")
     
+    
+    
+    ui.add_frame("left-sub-3", dict_frames["top left"], 1, 1, dict_frames, "none", "None", "silver", "none", "none")
+    
+    ui.add_frame("left-sub-1.5", dict_frames["left-sub-3"], 20, 1, dict_frames, "none", "none", "light grey", "x", "none")
+    ui.add_frame("sub1.5-sub1", dict_frames["left-sub-1.5"], 1, 1, dict_frames, "none", "none", "light grey", "x", "none")
+    ui.add_label("temp-label", dict_frames["sub1.5-sub1"], 5, 0, "Temperature", dict_labels, "left", "none", "light grey", "none", "none")
+    dict_labels["temp-label"].config(font=("Arial", 8))
+    ui.add_label("Temperature", dict_frames["left-sub-1.5"], 5, 5, "75", dict_labels, "none", "none", "light green", "x", "none")
+    dict_labels["Temperature"].config(font=("Arial", 18))
+    
+    ui.add_frame("Left-sub-2", dict_frames["left-sub-3"], 1, 1, dict_frames, "none", "None", "silver", "none", "none")
+    ui.add_frame("sub-2-sub-1", dict_frames["Left-sub-2"], 20, 1, dict_frames, "none", "None", "light grey", "x", "none")
+    ui.add_button("Air Conditioner", dict_frames["sub-2-sub-1"], 20, 1,lambda: print("AC toggle"),"Left","none","none", dict_buttons)
+    ui.add_label("AC state", dict_frames["sub-2-sub-1"], 20, 20, "Off", dict_labels, "none", "none", "silver", "none", "none")
+    ui.add_frame("sub-2-sub-2", dict_frames["Left-sub-2"], 20, 1, dict_frames, "none", "none", "light grey", "x", "none")
+    ui.add_button("Heat", dict_frames["sub-2-sub-2"], 20, 1,lambda: print("heat toggle"),"Left","x","none", dict_buttons)
+    ui.add_label("Structural Systems", dict_frames["sub-2-sub-2"], 20, 20, "Off", dict_labels, "none", "none", "silver", "none", "none")
+#------------------------------------------------------------------------------------------------------------------------------------------------------
+
+#------------------------------------------------------------------------Propulsion Systems------------------------------------------------------------
+
+#------------------------------------------------------------------------------------------------------------------------------------------------------
+
+#------------------------------------------------------------------------Structural Systems------------------------------------------------------------
+
+#------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 #-------------------------------------------------------------------------AI----------------------------------------------------------------

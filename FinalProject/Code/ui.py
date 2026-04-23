@@ -92,7 +92,7 @@ def add_slider(name, parent, xpad, ypad, dict_sliders, sticky="none"):
     dict_sliders[name] = slider
     return
 
-def add_label(name, parent, xpad, ypad, text, dict_labels, LorR, TorB, backg, sticky="none"):
+def add_label(name, parent, xpad, ypad, text, dict_labels, LorR, TorB, backg, fill, sticky="none"):
     print(f"creating label Widget named: {name} name with parent: {parent} pad x: {xpad} pad y: {ypad} and text: {text}")
     label = tk.Label(parent, text=text, bg=backg)
     anchor = _anchor_from_sticky(sticky)
@@ -109,6 +109,17 @@ def add_label(name, parent, xpad, ypad, text, dict_labels, LorR, TorB, backg, st
         print("none")
 
     label.pack(**pack_kwargs)
+    if fill.lower() == "x":
+        print("fill X")
+        label.pack_configure(fill=tk.X, expand=True)
+    elif fill.lower() == "y":
+        print("fill Y")
+        label.pack_configure(fill=tk.Y)
+    elif fill.lower() == "both":
+        print ("fill both")
+        label.pack_configure(fill=tk.BOTH, expand=True)
+    else:
+        label.pack_configure()
     dict_labels[name] = label
     return
 
@@ -143,12 +154,48 @@ def add_frame(name, parent, xpad, ypad, dict_frames, LorR, TorB, backg, fill, st
     dict_frames[name] = frame
     return
 
+def add_text_area(name, parent, xpad, ypad, dict_text_areas, LorR, backg, fill, width=None, height=None, editable=True, sticky="none"):
+    print(f"creating text area Widget named: {name} name with parent: {parent} pad x: {xpad} pad y: {ypad}")
+    text_kwargs = {"bg": backg, "state": tk.NORMAL if editable else tk.DISABLED}
+    if width is not None:
+        text_kwargs["width"] = width
+    if height is not None:
+        text_kwargs["height"] = height
+    text_area = tk.Text(parent, **text_kwargs)
+    anchor = _anchor_from_sticky(sticky)
+    pack_kwargs = {"pady": ypad, "padx": xpad}
+    if anchor:
+        pack_kwargs["anchor"] = anchor
+    if LorR.lower() == "left":
+        print("LEFT")
+        pack_kwargs["side"] = tk.LEFT
+    elif LorR.lower() == "right":
+        print("RIGHT")
+        pack_kwargs["side"] = tk.RIGHT
+    else:
+        print("none")
+
+    text_area.pack(**pack_kwargs)
+    if fill.lower() == "x":
+        print("fill X")
+        text_area.pack_configure(fill=tk.X, expand=True)
+    elif fill.lower() == "y":
+        print("fill Y")
+        text_area.pack_configure(fill=tk.Y)
+    elif fill.lower() == "both":
+        print ("fill both")
+        text_area.pack_configure(fill=tk.BOTH, expand=True)
+    else:
+        text_area.pack_configure()
+    dict_text_areas[name] = text_area
+    return
+
 #------------Button actions------------
-def play(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars):
+def play(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars, dict_text_areas):
     ls_root[0].withdraw()
     ls_root[2].deiconify()
-    loop.begin_day_loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars) #manages the day cycle using the time and random modules and various loops and conditional branches
-    loop.begin_loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars)#manages most behaviors, most of which are conditional if or elif or else statements, maybe some switch cases and various loops
+    loop.begin_day_loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars, dict_text_areas) #manages the day cycle using the time and random modules and various loops and conditional branches
+    loop.begin_loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars, dict_text_areas)#manages most behaviors, most of which are conditional if or elif or else statements, maybe some switch cases and various loops
 
     print("play!")
 
