@@ -191,13 +191,24 @@ def add_text_area(name, parent, xpad, ypad, dict_text_areas, LorR, backg, fill, 
     dict_text_areas[name] = text_area
     return
 
+def add_graph(name, parent, xpad, ypad, dict_graphs, width=400, height=200, x_range=(0, 100), y_range=(0, 100), update_frequency_secs=1.0, background="white", point_size=3, line_size=2, sticky="none"):
+    print(f"creating graph Widget named: {name} name with parent: {parent} pad x: {xpad} pad y: {ypad}")
+    graph = msc.GraphDrawer(parent, width=width, height=height, x_range=x_range, y_range=y_range, update_frequency_secs=update_frequency_secs, background=background, point_size=point_size, line_size=line_size)
+    anchor = _anchor_from_sticky(sticky)
+    pack_kwargs = {"pady": ypad, "padx": xpad}
+    if anchor:
+        pack_kwargs["anchor"] = anchor
+    graph.pack(**pack_kwargs)
+    dict_graphs[name] = graph
+    return graph
+
 #------------Button actions------------
-def play(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars, dict_text_areas):
+def play(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars, dict_text_areas, dict_graphs):
     ls_root[0].withdraw()
     ls_root[2].deiconify()
     loop.begin_day_loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars, dict_text_areas) #manages the day cycle using the time and random modules and various loops and conditional branches
     loop.begin_loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars, dict_text_areas)#manages most behaviors, most of which are conditional if or elif or else statements, maybe some switch cases and various loops
-
+    loop.begin_speed_thread(ls_threads, dict_sliders, dict_labels, dict_vars, dict_graphs) #manages the speed slider and label updates in a separate thread to prevent blocking the main loop
     print("play!")
 
 def quitgame(ls_root):

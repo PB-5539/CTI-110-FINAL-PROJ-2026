@@ -45,6 +45,7 @@ def main():
     dict_entries = {}
     dict_frames = {}
     dict_text_areas = {}
+    dict_graphs = {}
 
 
 
@@ -59,14 +60,11 @@ def main():
     ui.add_frame("game window", ls_root[2], 1, 1, dict_frames, "left", "None", "black", "Both", "none")
     ui.add_frame("sidebar", dict_frames["game window"], 1, 1, dict_frames, "left", "None", "grey", "y", "none")
     ui.add_frame("main frame", dict_frames["game window"], 1, 1, dict_frames, "left", "none", "grey", "both", "none")
-    pt.start_terminal(ls_terminal, ls_root, dict_frames, dict_vars)
-    pt.startup(ls_terminal[0])
-
-    pt.hide(ls_root[3])
+    
     ui.hide(ls_root[2])
     ui.hide(ls_root[1])
 
-    ui.add_button("play", ls_root[0], 20, 20, lambda: ui.play(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars, dict_text_areas),"none","none","none", dict_buttons)
+    ui.add_button("play", ls_root[0], 20, 20, lambda: ui.play(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars, dict_text_areas, dict_graphs),"none","none","none", dict_buttons)
     ui.add_button("settings", ls_root[0], 20, 20, lambda: ui.settings(ls_root[1]),"none","none","none", dict_buttons)
     ui.add_button("quit", ls_root[0], 20, 120, lambda: ui.quitgame(ls_root[0]),"none","none","none", dict_buttons)
 
@@ -77,7 +75,7 @@ def main():
     ui.add_button("Guide", dict_frames["sidebar"], 20, 20, lambda: ui.guidebook(ls_frame_windows, dict_frames),"none","none","none", dict_buttons)
 
     ui.add_label("game window label", dict_frames["main frame"], 20, 20, f"------------------", dict_labels, "None", "None", "grey", "none", "none")
-    ui.add_button("terminal", dict_frames["main frame"], 20, 20, lambda: pt.show(ls_root, ls_terminal, dict_frames),"none","none","none", dict_buttons)
+    ui.add_button("terminal", dict_frames["main frame"], 20, 20, lambda: pt.show(ls_root, ls_terminal, dict_frames, dict_vars),"none","none","none", dict_buttons)
 
     ui.add_frame("top left", dict_frames["main frame"], 1, 1, dict_frames, "left", "None", "silver", "both", "none")
     ui.add_label("Life Support Systems", dict_frames["top left"], 20, 20, "Life Support Systems", dict_labels, "none", "none", "silver", "none", "none")
@@ -86,14 +84,19 @@ def main():
     ui.add_frame("top right", dict_frames["main frame"], 1, 1, dict_frames, "left", "None", "silver", "both", "none")
     ui.add_label("Structural Systems", dict_frames["top right"], 20, 20, "Structural Systems", dict_labels, "none", "none", "silver", "none", "none")
 
+    pt.start_terminal(ls_terminal, ls_root, dict_frames, dict_vars)
+    pt.startup(ls_terminal[0])
+
+    pt.hide(ls_root[3])
 #------------------------------------------------------------------------Life Support Systems------------------------------------------------------------
+    ui.add_frame("Left-sub", dict_frames["top left"], 1, 1, dict_frames, "none", "None", "light grey", "none", "none")
+    ui.add_frame("Left-sub-4", dict_frames["top left"], 1, 1, dict_frames, "none", "None", "light grey", "none", "none")
     ui.add_frame("Left-sub-0", dict_frames["top left"], 1, 1, dict_frames, "none", "None", "silver", "none", "none")
-    ui.add_frame("Left-sub-1", dict_frames["top left"], 1, 1, dict_frames, "none", "None", "silver", "none", "none")
+    ui.add_frame("Left-sub-1", dict_frames["Left-sub-4"], 1, 1, dict_frames, "none", "None", "silver", "none", "none")
+    
     ui.add_button("Change Air Filter", dict_frames["Left-sub-1"], 1, 1,lambda: print("Changing air filter"),"Left","none","none", dict_buttons)
     ui.add_label("filter timer", dict_frames["Left-sub-1"], 3, 1, "10", dict_labels, "Left", "none", "white", "none", "none")
-    ui.add_slider("Air Flow Rate", dict_frames["top left"], 20, 20, dict_sliders, 100, "none")
-    
-    
+    ui.add_slider("Air Flow Rate", dict_frames["Left-sub-4"], 46, 20, dict_sliders, 100, "none")
     
     ui.add_frame("left-sub-3", dict_frames["top left"], 1, 1, dict_frames, "none", "None", "silver", "none", "none")
     
@@ -111,12 +114,20 @@ def main():
     ui.add_frame("sub-2-sub-2", dict_frames["Left-sub-2"], 20, 1, dict_frames, "none", "none", "light grey", "x", "none")
     ui.add_button("Heat", dict_frames["sub-2-sub-2"], 20, 1,lambda: Heat_visual_logic(dict_labels),"Left","x","none", dict_buttons)
     ui.add_label("Heat state", dict_frames["sub-2-sub-2"], 20, 20, "Off", dict_labels, "none", "none", "silver", "none", "none")
-
-
-
 #------------------------------------------------------------------------------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------Propulsion Systems------------------------------------------------------------
+    ui.add_frame("middle-sub", dict_frames["top middle"], 1, 1, dict_frames, "none", "None", "light grey", "none", "none")
+    
+    ui.add_frame("middle-sub-2", dict_frames["top middle"], 1, 1, dict_frames, "none", "None", "silver", "none", "none")
+    ui.add_slider("Main Throttle", dict_frames["middle-sub-2"], 46, 20, dict_sliders, 100, "none")
+    ui.add_label("speed", dict_frames["middle-sub-2"], 5, 0, "Speed", dict_labels, "left", "none", "light grey", "none", "none")
+    dict_labels["speed"].config(font=("Arial", 8))
+    ui.add_label("Speed", dict_frames["middle-sub-2"], 5, 5, "0 m/s", dict_labels, "none", "none", "light green", "x", "none")
+    dict_labels["Speed"].config(font=("Arial", 18))
+    
+    ui.add_frame("middle-sub-1", dict_frames["top middle"], 1, 1, dict_frames, "none", "None", "silver", "none", "none")
+    ui.add_graph("SpeedGraph", dict_frames["middle-sub-1"], 5, 10, dict_graphs, width=200, height=160, x_range=(0, 30), y_range=(0, 340), update_frequency_secs=0.5, background="black", point_size=0, line_size=2, sticky="none")
 
 #------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -188,6 +199,18 @@ def main():
             
             # Clear processed updates
             loop.pending_slider_values.clear()
+
+        # Process graph updates queued from background threads
+        if hasattr(loop, 'pending_graph_updates'):
+            with loop.graph_update_lock:
+                updates = list(loop.pending_graph_updates)
+                loop.pending_graph_updates.clear()
+            for graph_key, values, colors in updates:
+                if graph_key in dict_graphs:
+                    try:
+                        dict_graphs[graph_key].update(values, colors)
+                    except tk.TclError:
+                        pass
         
         # Schedule next update as fast as possible (1ms)
         ls_root[0].after(1, update_widgets)

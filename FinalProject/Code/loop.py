@@ -31,7 +31,9 @@ def safe_print(*args, **kwargs):
 #----Thread-safe widget update dictionary
 pending_widget_updates = {}
 pending_slider_values = {}
+pending_graph_updates = []
 slider_current_values = {}  # Track slider values for background threads
+graph_update_lock = th.Lock()
 
 def queue_config(widget_key, **kwargs):
     """Queue a widget config change (thread-safe).
@@ -46,6 +48,16 @@ def queue_slider_value(slider_key, value):
     Usage: queue_slider_value("Air Flow Rate", 50)
     """
     pending_slider_values[slider_key] = value
+
+def queue_graph_update(graph_key, values, colors=None):
+    """Queue a graph data update (thread-safe).
+    values: dict[name -> value]
+    colors: dict[name -> color]
+    """
+    if not isinstance(values, dict):
+        return
+    with graph_update_lock:
+        pending_graph_updates.append((graph_key, values.copy(), colors.copy() if isinstance(colors, dict) else {}))
 #-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -69,6 +81,9 @@ def loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_fram
         # Only print every 100 iterations to reduce output
         if iteration_count % 100 == 0:
             safe_print(f"[GAME LOOP] Iteration {iteration_count}")
+
+
+
         
         #Main Game Logic---------------------\/
         
@@ -128,9 +143,10 @@ def day_loop(ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict
         if day == 0:
             queue_config("day counter", text=str(f"Day {day} (Tutorial)"))
             au.play_audio("TutorialTheme.wav")
-            for i in range(int(f"{misc.get_duration("TutorialTheme.wav"):.0f}")):
+            tutorial_duration = misc.get_duration("TutorialTheme.wav")
+            for i in range(int(f"{tutorial_duration:.0f}")):
 
-                queue_config("timer", text=f"{int(misc.get_duration("TutorialTheme.wav") - (i))} seconds until Day {tomorrow}")
+                queue_config("timer", text=f"{int(tutorial_duration - i)} seconds until Day {tomorrow}")
                 queue_config("sidebar title", text=f"{tm.ctime()}")
                 tm.sleep(1)
             day += 1
@@ -164,3 +180,46 @@ def begin_day_loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries,
     thread.start()
     ls_threads.append(thread)
     return thread
+
+# Smoothly simulate a speed value based on the Main Throttle setting.
+# This thread never reads the widget directly; it reads tracked throttle values from
+# loop.slider_current_values and uses queue_config to update the "Speed" label safely.
+# The target speed is derived from the slider value via (throttle * 335 / 200).
+# The speed moves by a percentage of the remaining distance each 0.1 seconds.
+#thread creation function to call on play.
+def begin_speed_thread(ls_threads, dict_sliders, dict_labels, dict_vars, dict_graphs):
+    thread = th.Thread(target=speed_thread, args=(dict_sliders, dict_labels, dict_vars, dict_graphs), daemon=True)
+    thread.start()
+    ls_threads.append(thread)
+    return thread
+
+#main function
+def speed_thread(dict_sliders, dict_labels, dict_vars, dict_graphs):
+    import random as rdm
+    throttle_key = "Main Throttle"
+    speed_label_key = "Speed"
+    graph_key = "SpeedGraph"
+    current_speed = 0.0
+    accumulated_time = 0.0
+    update_interval = dict_graphs[graph_key].update_frequency_secs if graph_key in dict_graphs else 1.0
+
+    while True:
+        # Read current throttle from the shared tracking dictionary.
+        target_throttle = slider_current_values.get(throttle_key, 100.0)
+        target_speed = target_throttle * (335.0 / 200.0)
+
+        # Move speed toward target using 10% of the remaining distance.
+        speed_difference = target_speed - current_speed
+        if abs(speed_difference) <= 0.1:
+            current_speed = target_speed
+        else:
+            current_speed += speed_difference * 0.1
+
+        queue_config(speed_label_key, text=f"{current_speed:.2f} m/s")
+
+        accumulated_time += 0.1
+        if accumulated_time >= update_interval:
+            accumulated_time -= update_interval
+            queue_graph_update(graph_key, {"Speed": current_speed}, {"Speed": "light green"})
+
+        tm.sleep(0.1)
