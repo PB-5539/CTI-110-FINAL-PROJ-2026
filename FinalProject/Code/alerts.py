@@ -2,10 +2,11 @@ import random as rdm
 import time as tm
 import math
 import tkinter as tk
+import audio_utils as au
 
 # Track last alert send times to prevent duplicate alerts within 30 seconds
 _alert_history = {}
-
+#--------------------------------------------------------------------------------AI--------------------------------------------------------------------------------------
 def send_alert(text, urgency, sound, dict_text_areas=None, text_area_name=None): #urgency will be on a 1-3 scale
     global _alert_history
     
@@ -23,6 +24,20 @@ def send_alert(text, urgency, sound, dict_text_areas=None, text_area_name=None):
     _alert_history[alert_key] = current_time
     
     print(f"sending alert: [{text}] with urgency rating of: {urgency}/3 with sound condition: {sound}")
+
+    if sound:
+        if urgency == 1:
+            print("Playing low urgency sound")
+            au.play_audio("alert_sound.wav")  # Replace with actual sound file path
+
+        elif urgency == 2:
+            print("Playing medium urgency sound")
+            au.play_audio("alert_sound.wav")  # Replace with actual sound file path
+
+        elif urgency == 3:
+            print("Playing high urgency sound")
+            au.play_audio("alert_sound.wav")  # Replace with actual sound file path
+            
     
     # Write alert to text area if dict_text_areas and text_area_name are provided
     if dict_text_areas is not None and text_area_name is not None:
@@ -32,5 +47,23 @@ def send_alert(text, urgency, sound, dict_text_areas=None, text_area_name=None):
             text_widget.config(state=tk.NORMAL)
             # Write alert
             text_widget.insert(tk.END, f"[ALERT - Urgency {urgency}/3] {text}\n")
+            # Scroll to the end to show the new alert
+            text_widget.see(tk.END)
             # Make read-only again
             text_widget.config(state=tk.DISABLED)
+
+def reset_alert_delay(alert_key=None):
+    """
+    Reset the alert delay for a specific alert or all alerts.
+    
+    Args:
+        alert_key (tuple, optional): The specific alert key (text, urgency, sound) to reset.
+                                    If None, resets all alert delays.
+    """
+    global _alert_history
+    if alert_key is not None:
+        if alert_key in _alert_history:
+            del _alert_history[alert_key]
+    else:
+        _alert_history.clear()
+#------------------------------------------------------------------------------------------------------------------------------------------------------

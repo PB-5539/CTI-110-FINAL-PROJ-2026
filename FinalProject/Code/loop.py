@@ -92,16 +92,35 @@ def loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_fram
             tween_thread = th.Thread(target=misc.tween_slider, args=("Air Flow Rate", dict_sliders, rdm.randrange(5,185)), daemon=True)
             tween_thread.start()
             ls_threads.append(tween_thread)
-        if not(dict_sliders["Air Flow Rate"].get() > 60 and dict_sliders["Air Flow Rate"].get() < 130):
-            if life_support_system_integrity > 5000:
-                als.send_alert("Oxygen levels dropping!", 2, True, dict_text_areas, "alerts")
-            elif life_support_system_integrity <= 5000:
-                als.send_alert("Oxygen levels critical!", 3, True, dict_text_areas, "alerts")
+        if (dict_sliders["Air Flow Rate"].get() < 60):
+            if life_support_system_integrity > 5000 and life_support_system_integrity <= 15000:
+                als.send_alert("Oxygen levels low", 2, True, dict_text_areas, "alerts")
+            elif life_support_system_integrity <= 1000:
+                als.send_alert("Oxygen levels critical", 3, True, dict_text_areas, "alerts")
             else:
-                als.send_alert("Oxygen levels stable.", 1, False, dict_text_areas, "alerts")
+                als.send_alert("Oxygen levels falling", 1, False, dict_text_areas, "alerts")
             oxy_err = True
-        else:
+            life_support_system_integrity -= 10
+            tm.sleep(0.1)
+        elif (dict_sliders["Air Flow Rate"].get() > 130):
+            if life_support_system_integrity > 5000 and life_support_system_integrity <= 15000:
+                als.send_alert("Oxygen levels high", 2, True, dict_text_areas, "alerts")
+            elif life_support_system_integrity <= 1000:
+                als.send_alert("Oxygen levels critical", 3, True, dict_text_areas, "alerts")
+            else:
+                als.send_alert("Oxygen levels rising", 1, False, dict_text_areas, "alerts")
+            oxy_err = True
+            life_support_system_integrity -= 3
+            tm.sleep(0.1)
+        elif dict_sliders["Air Flow Rate"].get() >60 and dict_sliders["Air Flow Rate"].get() < 130:
             oxy_err = False
+            als.reset_alert_delay(("Oxygen levels low", 2, True))
+            als.reset_alert_delay(("Oxygen levels critical", 3, True))
+            als.reset_alert_delay(("Oxygen levels falling", 1, False))
+            als.reset_alert_delay(("Oxygen levels high", 2, True))
+            als.reset_alert_delay(("Oxygen levels critical", 3, True))
+            als.reset_alert_delay(("Oxygen levels rising", 1, False))
+            als.send_alert("Oxygen levels stable", 0, False, dict_text_areas, "alerts")
         #goal is to keep it within the range of 60-130 and not let it be out of that range for more than 60 seconds and not at any extreme values (<15 and >185) for more than 25 seconds, if it is then the life support system integrity will decrease by 10 points every 2.5 seconds until it is back in the safe range, if it reaches 0  then the game is over
         #each day a percentage of the remaining integrity of each item will be repaired.
         
@@ -180,7 +199,7 @@ def begin_day_loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries,
     thread.start()
     ls_threads.append(thread)
     return thread
-
+#------------------------------------------------------------------------------AI-----------------------------------------------------------------------------
 # Smoothly simulate a speed value based on the Main Throttle setting.
 # This thread never reads the widget directly; it reads tracked throttle values from
 # loop.slider_current_values and uses queue_config to update the "Speed" label safely.
@@ -206,7 +225,7 @@ def speed_thread(dict_sliders, dict_labels, dict_vars, dict_graphs):
     while True:
         # Read current throttle from the shared tracking dictionary.
         target_throttle = slider_current_values.get(throttle_key, 100.0)
-        target_speed = target_throttle * (335.0 / 200.0)
+        target_speed = target_throttle * (rdm.randint(300, 360) / 200.0)
 
         # Move speed toward target using 10% of the remaining distance.
         speed_difference = target_speed - current_speed
@@ -222,4 +241,24 @@ def speed_thread(dict_sliders, dict_labels, dict_vars, dict_graphs):
             accumulated_time -= update_interval
             queue_graph_update(graph_key, {"Speed": current_speed}, {"Speed": "light green"})
 
+        tm.sleep(0.1)
+#------------------------------------------------------------------------------------------------------------------------------------------------------
+
+def start_fun_thread(ls_threads, dict_vars):
+    thread = th.Thread(target=fun_thread,args=(dict_vars,), daemon=True)
+    thread.start()
+    ls_threads.append(thread)
+    return thread
+#turns out, somehow between debugging a wierd situation with the threading module and passing arguments, i learned what a string indice is as well as how to make arguments optional!
+#also why the hell does threading by default try to pass arguments as the value they represent not the item itself like how passing dict_vars was trying to pass 14 different arguments probably each tied to a key:value pair.
+#modules are wierd, threading is wierder, it works now, thats all I care about.
+def fun_thread(dict_vars):  
+    while not dict_vars['play']:
+        safe_print(f"TF: {dict_vars['play']}")
+        safe_print("Fun thread is running! This is where fun stuff would happen.")
+        queue_graph_update("FunGraph", {"1": rdm.randint(0, 20)}, {"1": "blue"})
+        queue_graph_update("FunGraph", {"2": rdm.randint(20, 40)}, {"2": "red"})
+        queue_graph_update("FunGraph", {"3": rdm.randint(40, 60)}, {"3": "green"})
+        queue_graph_update("FunGraph", {"4": rdm.randint(60, 80)}, {"4": "yellow"})
+        queue_graph_update("FunGraph", {"5": rdm.randint(80, 100)}, {"5": "purple"})
         tm.sleep(0.1)

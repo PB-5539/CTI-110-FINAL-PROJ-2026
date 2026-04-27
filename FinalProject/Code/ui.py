@@ -1,3 +1,4 @@
+import threading as th
 import tkinter as tk
 import time as tm
 from tkinter import ttk
@@ -210,6 +211,7 @@ def play(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_fram
     loop.begin_loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars, dict_text_areas)#manages most behaviors, most of which are conditional if or elif or else statements, maybe some switch cases and various loops
     loop.begin_speed_thread(ls_threads, dict_sliders, dict_labels, dict_vars, dict_graphs) #manages the speed slider and label updates in a separate thread to prevent blocking the main loop
     print("play!")
+    dict_vars["play"] = True
 
 def quitgame(ls_root):
     ls_root.deiconify()

@@ -17,12 +17,14 @@ def start_terminal(ls_terminal, ls_root, dict_frames, dict_vars):
     def refresh_top():
         text_area.config(state=tk.NORMAL)
         text_area.delete(1.0, tk.END)
-        text_area.insert(tk.END, "TOP - press Enter to refresh, Ctrl+C to exit top mode\n")
+        text_area.insert(tk.END, "TOP - Ctrl+C to exit TOP\n")
         text_area.insert(tk.END, "-------------------------------------------\n")
         for key, value in dict_vars.items():
             text_area.insert(tk.END, f"{key}: {value}\n")
         text_area.see(tk.END)
         text_area.config(state=tk.DISABLED)
+        if top_mode["active"]:
+            terminal.after(100, refresh_top)
 
     def exit_top(event=None):
         if not top_mode["active"]:
@@ -85,7 +87,6 @@ def start_terminal(ls_terminal, ls_root, dict_frames, dict_vars):
 
     def on_enter(event=None):
         if top_mode["active"]:
-            refresh_top()
             return
         text_area.config(state=tk.NORMAL)
         cmd = entry.get()

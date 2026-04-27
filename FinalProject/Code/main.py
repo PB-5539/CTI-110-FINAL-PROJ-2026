@@ -17,6 +17,7 @@ import alerts as als
 #----Main function
 def main():
     #----initialize variables
+    fun = True
     #mutable variables are stored within a dictionary for a more easy way to transfer between threads using dict_vars["variable name"] to get the variable rather than passing through all the variables through the loop.begin_loop(...) function
     dict_vars = {"days":0, "current_cycle":0, "structural_integrity":0, "life_support_system_integrity":0, "temperature_C":0, "temperature_F":0}
     dict_vars["days"] = rdm.randrange(30,55,1)
@@ -29,6 +30,7 @@ def main():
     dict_vars["temperature_C"] = 0
     dict_vars["temperature_F"] = 32
     dict_vars["fun_value"] = rdm.randrange(0,100)
+    dict_vars["play"] = False
     #the fun value is a variable hidden from the user that dictates the rate of occurance for random events.
     dict_vars["oxy_err"] = False
     dict_vars["sens_err"] = False
@@ -48,10 +50,6 @@ def main():
     dict_graphs = {}
 
 
-
-
-
-
     ui.create_main_ui("main window", "1920x1080", True, ls_root, ls_terminal, ls_frame_windows, dict_frames)
     print(ls_root)
     print("game now loading...")
@@ -64,14 +62,21 @@ def main():
     ui.hide(ls_root[2])
     ui.hide(ls_root[1])
 
-    ui.add_button("play", ls_root[0], 20, 20, lambda: ui.play(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars, dict_text_areas, dict_graphs),"none","none","none", dict_buttons)
-    ui.add_button("settings", ls_root[0], 20, 20, lambda: ui.settings(ls_root[1]),"none","none","none", dict_buttons)
-    ui.add_button("quit", ls_root[0], 20, 120, lambda: ui.quitgame(ls_root[0]),"none","none","none", dict_buttons)
+    ui.add_button("Play", ls_root[0], 20, 20, lambda: ui.play(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars, dict_text_areas, dict_graphs),"left","none","none", dict_buttons)
+    dict_buttons["Play"].config(font=("Courier", 24))
+    ui.add_button("Settings", ls_root[0], 20, 20, lambda: ui.settings(ls_root[1]),"Left","none","none", dict_buttons)
+    dict_buttons["Settings"].config(font=("Courier", 24))
+    ui.add_button("Quit", ls_root[0], 20, 120, lambda: ui.quitgame(ls_root[0]),"Left","none","none", dict_buttons)
+    dict_buttons["Quit"].config(font=("Courier", 24))
+
+    ui.add_graph("FunGraph", ls_root[0], 20, 20, dict_graphs, width=900, height=700, x_range=(0, 100), y_range=(0, 100), update_frequency_secs=0.1, background="white", point_size=1, line_size=2, sticky="none")
+
+
 
     ui.add_label("sidebar title", dict_frames["sidebar"], 20, 20, "sidebar!",  dict_labels, "none", "None", "light grey", "none", "none")
     ui.add_label("day counter", dict_frames["sidebar"], 20, 20, "", dict_labels, "none", "none", "light grey", "none", "none")
     ui.add_label("timer", dict_frames["sidebar"], 20, 20, "", dict_labels, "none", "none", "light grey", "none", "none")
-    ui.add_text_area("alerts", dict_frames["sidebar"], 20, 20, dict_text_areas, "none", "light grey", "none", 30, 40, False, "none")
+    ui.add_text_area("alerts", dict_frames["sidebar"], 20, 20, dict_text_areas, "none", "light grey", "none", 29, 30, False, "none")
     ui.add_button("Guide", dict_frames["sidebar"], 20, 20, lambda: ui.guidebook(ls_frame_windows, dict_frames),"none","none","none", dict_buttons)
 
     ui.add_label("game window label", dict_frames["main frame"], 20, 20, f"------------------", dict_labels, "None", "None", "grey", "none", "none")
@@ -105,7 +110,7 @@ def main():
     ui.add_label("temp-label", dict_frames["sub1.5-sub1"], 5, 0, "Temperature", dict_labels, "left", "none", "light grey", "none", "none")
     dict_labels["temp-label"].config(font=("Arial", 8))
     ui.add_label("Temperature", dict_frames["left-sub-1.5"], 5, 5, "75", dict_labels, "none", "none", "light green", "x", "none")
-    dict_labels["Temperature"].config(font=("Arial", 18))
+    dict_labels["Temperature"].config(font=("Courier", 18))
     
     ui.add_frame("Left-sub-2", dict_frames["left-sub-3"], 1, 1, dict_frames, "none", "None", "silver", "none", "none")
     ui.add_frame("sub-2-sub-1", dict_frames["Left-sub-2"], 20, 1, dict_frames, "none", "None", "light grey", "x", "none")
@@ -124,8 +129,8 @@ def main():
     ui.add_label("speed", dict_frames["middle-sub-2"], 5, 0, "Speed", dict_labels, "left", "none", "light grey", "none", "none")
     dict_labels["speed"].config(font=("Arial", 8))
     ui.add_label("Speed", dict_frames["middle-sub-2"], 5, 5, "0 m/s", dict_labels, "none", "none", "light green", "x", "none")
-    dict_labels["Speed"].config(font=("Arial", 18))
-    
+    dict_labels["Speed"].config(font=("Courier", 18))
+
     ui.add_frame("middle-sub-1", dict_frames["top middle"], 1, 1, dict_frames, "none", "None", "silver", "none", "none")
     ui.add_graph("SpeedGraph", dict_frames["middle-sub-1"], 5, 10, dict_graphs, width=200, height=160, x_range=(0, 30), y_range=(0, 340), update_frequency_secs=0.5, background="black", point_size=0, line_size=2, sticky="none")
 
@@ -222,6 +227,7 @@ def main():
 
     #run
     ls_root[2].protocol("WM_DELETE_WINDOW", lambda: ui.quitgame(ls_root[0]))
+    loop.start_fun_thread(ls_threads, dict_vars)
     ui.run(ls_root[0]) #THIS GOES AT THE END OF THE MAIN FUNCTION, ALL CODE AFTER IT WILL NOT RUN UNTILL THE WINDOWS HAVE EITHER BEEN CLOSED BY THE USER OR DESTROYRD VIA '<object name>.Destroy()'
 
 def AC_visual_logic(dict_labels):
