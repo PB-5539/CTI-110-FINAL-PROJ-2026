@@ -4,6 +4,9 @@ import random as rdm
 import time as tm
 import threading as th
 import tkinter as tk
+import numpy as np
+import os
+import soundfile as sf
 
 
 #----import internal modules
@@ -58,6 +61,126 @@ def queue_graph_update(graph_key, values, colors=None):
         return
     with graph_update_lock:
         pending_graph_updates.append((graph_key, values.copy(), colors.copy() if isinstance(colors, dict) else {}))
+#-----------------------------------------------------------------------AI--------------------------------------------------------------------------------------------------------------------------------------------------------------
+#----Audio Analysis Cache
+audio_analysis_cache = {}
+
+def analyze_audio_file(filepath):
+    """Analyze audio file and extract simple audio features.
+    Each feature has its own independent 0-100 range based on the audio file's characteristics.
+    """
+    if filepath in audio_analysis_cache:
+        safe_print(f"[AUDIO ANALYSIS] Using cached analysis for {filepath}")
+        return audio_analysis_cache[filepath]
+    
+    try:
+        # Construct full path to audio file (matching audio_utils.py path structure)
+        full_path = os.path.join("finalproject", "Audio", "WAV", filepath)
+        safe_print(f"[AUDIO ANALYSIS] Loading file: {full_path}")
+        
+        # Check if file exists
+        if not os.path.isfile(full_path):
+            safe_print(f"[AUDIO ANALYSIS ERROR] File not found: {full_path}")
+            return None
+        
+        # Load audio file using soundfile
+        safe_print(f"[AUDIO ANALYSIS] Reading audio with soundfile...")
+        audio_data, sample_rate = sf.read(full_path)
+        safe_print(f"[AUDIO ANALYSIS] Loaded: sample_rate={sample_rate}, shape={audio_data.shape}")
+        
+        # Handle stereo/mono
+        if len(audio_data.shape) > 1:
+            audio_data = np.mean(audio_data, axis=1)  # Convert stereo to mono
+        
+        # Calculate frames for 0.1s steps
+        frame_size = int(sample_rate * 0.1)
+        num_frames = len(audio_data) // frame_size
+        safe_print(f"[AUDIO ANALYSIS] Frame size: {frame_size}, Total frames: {num_frames}")
+        
+        # First pass: Calculate all raw features to find min/max
+        raw_features = []
+        
+        for i in range(num_frames):
+            start_idx = i * frame_size
+            end_idx = start_idx + frame_size
+            frame = audio_data[start_idx:end_idx]
+            
+            # Feature 1: Progress (0-1 based on position in song, with random noise)
+            progress = i / num_frames * 100
+            noise = rdm.uniform(-5, 5)
+            progress_with_noise = np.clip(progress + noise, 0, 100)
+            
+            # Feature 2: Frequency Content (estimated from zero crossing rate)
+            # More zero crossings = higher frequency content
+            zero_crossings = np.sum(np.abs(np.diff(np.sign(frame)))) / 2
+            freq_estimate = (zero_crossings / len(frame)) * 100
+            
+            # Feature 3: Brightness (spectral centroid approximation)
+            # High frequency content estimation
+            fft = np.abs(np.fft.fft(frame))
+            freqs = np.fft.fftfreq(len(frame), 1/sample_rate)
+            brightness = np.sum(fft[:len(fft)//2]) / len(fft) * 100
+            
+            # Feature 4: Energy Envelope (RMS with smooth trending)
+            rms = np.sqrt(np.mean(frame ** 2)) * 100
+            
+            # Feature 5: Attack/Release (how fast amplitude changes)
+            amplitude_changes = np.abs(np.diff(np.abs(frame)))
+            attack_release = np.mean(amplitude_changes) * 1000
+            
+            raw_features.append({
+                "Progress": progress_with_noise,
+                "Frequency": freq_estimate,
+                "Brightness": brightness,
+                "Energy": rms,
+                "Attack": attack_release
+            })
+        
+        # Find min/max for each feature
+        feature_names = ["Progress", "Frequency", "Brightness", "Energy", "Attack"]
+        feature_ranges = {}
+        
+        for feature_name in feature_names:
+            values = [f[feature_name] for f in raw_features]
+            feature_ranges[feature_name] = {
+                "min": min(values),
+                "max": max(values)
+            }
+        
+        safe_print(f"[AUDIO ANALYSIS] Feature ranges:")
+        for feature_name, range_dict in feature_ranges.items():
+            safe_print(f"  {feature_name}: {range_dict['min']:.4f} - {range_dict['max']:.4f}")
+        
+        # Second pass: Normalize each feature to 0-100 range independently
+        frames_data = []
+        
+        for raw_frame in raw_features:
+            normalized_frame = {}
+            for feature_name in feature_names:
+                raw_val = raw_frame[feature_name]
+                feat_min = feature_ranges[feature_name]["min"]
+                feat_max = feature_ranges[feature_name]["max"]
+                
+                # Normalize to 0-100
+                if feat_max > feat_min:
+                    normalized_val = ((raw_val - feat_min) / (feat_max - feat_min)) * 100
+                else:
+                    normalized_val = 50  # Default middle if no range
+                
+                normalized_frame[feature_name] = max(0, min(100, normalized_val))
+            
+            frames_data.append(normalized_frame)
+        
+        safe_print(f"[AUDIO ANALYSIS] Extracted and normalized {len(frames_data)} frames successfully")
+        audio_analysis_cache[filepath] = frames_data
+        return frames_data
+        
+    except Exception as e:
+        safe_print(f"[AUDIO ANALYSIS ERROR] {e}")
+        import traceback
+        traceback.print_exc()
+        return None
+
 #-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -252,13 +375,64 @@ def start_fun_thread(ls_threads, dict_vars):
 #turns out, somehow between debugging a wierd situation with the threading module and passing arguments, i learned what a string indice is as well as how to make arguments optional!
 #also why the hell does threading by default try to pass arguments as the value they represent not the item itself like how passing dict_vars was trying to pass 14 different arguments probably each tied to a key:value pair.
 #modules are wierd, threading is wierder, it works now, thats all I care about.
+
+#----------------------------------------------------------------------------------------AI Modified Fun Thread--------------------------------------------------------------------------------------
 def fun_thread(dict_vars):  
     while not dict_vars['play']:
-        safe_print(f"TF: {dict_vars['play']}")
-        safe_print("Fun thread is running! This is where fun stuff would happen.")
-        queue_graph_update("FunGraph", {"1": rdm.randint(0, 20)}, {"1": "blue"})
-        queue_graph_update("FunGraph", {"2": rdm.randint(20, 40)}, {"2": "red"})
-        queue_graph_update("FunGraph", {"3": rdm.randint(40, 60)}, {"3": "green"})
-        queue_graph_update("FunGraph", {"4": rdm.randint(60, 80)}, {"4": "yellow"})
-        queue_graph_update("FunGraph", {"5": rdm.randint(80, 100)}, {"5": "purple"})
-        tm.sleep(0.1)
+        audio_file = "MainMenu.wav"
+        safe_print("[FUN THREAD] Starting fun_thread")
+        au.play_audio(audio_file)
+        
+        # Analyze audio file
+        safe_print("[FUN THREAD] Analyzing audio file...")
+        frames_data = analyze_audio_file(audio_file)
+        if frames_data is None:
+            safe_print("[FUN THREAD] Audio analysis failed, skipping this iteration")
+            tm.sleep(1)
+            continue
+        
+        safe_print(f"[FUN THREAD] Got {len(frames_data)} frames of audio data")
+        
+        # Get total duration
+        total_duration = misc.get_duration(audio_file)
+        safe_print(f"[FUN THREAD] Audio duration: {total_duration}s")
+        
+        frame_index = 0
+        
+        # Play audio reactively through its features
+        while frame_index < len(frames_data) and not dict_vars['play']:
+            frame_values = frames_data[frame_index]
+            
+            # Map each line to its own vertical range to prevent overlap
+            # Line 1 (Progress): 0-20 - Runtime with randomization
+            # Line 2 (Frequency): 20-40 - Pitch/frequency content
+            # Line 3 (Brightness): 40-60 - Brightness/spectral content
+            # Line 4 (Energy): 60-80 - Energy envelope
+            # Line 5 (Attack): 80-100 - Attack/release sharpness
+            
+            progress_scaled = (frame_values["Progress"] / 100) * 20 + 0
+            freq_scaled = (frame_values["Frequency"] / 100) * 40 + 20
+            bright_scaled = (frame_values["Brightness"] / 100) * 20 + 40
+            energy_scaled = (frame_values["Energy"] / 100) * 20 + 60
+            attack_scaled = (frame_values["Attack"] / 100) * 20 + 80
+            
+            # Queue graph updates with non-overlapping ranges
+            queue_graph_update("FunGraph", {
+                "Progress": progress_scaled*2,
+                "Frequency": freq_scaled,
+                "Brightness": bright_scaled,
+                "Energy": energy_scaled,
+                "Attack": attack_scaled
+            }, {
+                "Progress": "blue",
+                "Frequency": "red",
+                "Brightness": "green",
+                "Energy": "yellow",
+                "Attack": "cyan"
+            })
+            
+            if frame_index % 10 == 0:  # Print every 1 second
+                safe_print(f"[FUN THREAD] Frame {frame_index}: Progress={progress_scaled:.1f} Freq={freq_scaled:.1f} Bright={bright_scaled:.1f} Energy={energy_scaled:.1f} Attack={attack_scaled:.1f}")
+            
+            frame_index += 1
+            tm.sleep(0.1)

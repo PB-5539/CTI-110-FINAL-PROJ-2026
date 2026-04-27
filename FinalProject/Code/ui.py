@@ -14,6 +14,7 @@ def create_main_ui(name, geometry, resizeable, ls_root, ls_terminal, ls_frame_wi
     root = tk.Tk()
     root.title(name)
     root.geometry(geometry)
+    root.configure(bg="silver")
     ls_root.insert(0, root)
 
     placeholder = tk.Toplevel()
@@ -50,9 +51,9 @@ def _anchor_from_sticky(sticky):
     return None
 
 
-def add_button(name, parent, xpad, ypad, action, LorR, fill, sticky="none", dict_buttons=None):
+def add_button(name, parent, xpad, ypad, action, LorR, fill, sticky="none", dict_buttons=None, bg=None):
     print(f"creating Button Widget named: {name} name with parent: {parent} pad x: {xpad} pad y: {ypad} and action: {action}")
-    button = tk.Button(parent, text=name, command=action)
+    button = tk.Button(parent, text=name, command=action, bg=bg)
     anchor = _anchor_from_sticky(sticky)
     pack_kwargs = {"pady": ypad, "padx": xpad}
     if anchor:

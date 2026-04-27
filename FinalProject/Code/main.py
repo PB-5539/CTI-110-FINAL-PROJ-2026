@@ -62,14 +62,18 @@ def main():
     ui.hide(ls_root[2])
     ui.hide(ls_root[1])
 
-    ui.add_button("Play", ls_root[0], 20, 20, lambda: ui.play(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars, dict_text_areas, dict_graphs),"left","none","none", dict_buttons)
+    ui.add_frame("mainmenu", ls_root[0], 100,100, dict_frames, "none", "None", "grey", "none", "c")
+    dict_frames["mainmenu"].pack_configure(anchor="center")#center the frame within the window
+    ui.add_frame("mainmenu-sub-1", dict_frames["mainmenu"], 1, 1, dict_frames, "left", "None", "grey", "none", "none")
+    ui.add_frame("mainmenu-sub-2", dict_frames["mainmenu"], 1, 1, dict_frames, "left", "None", "grey", "none", "none")
+    ui.add_button("Play",dict_frames["mainmenu-sub-1"], 20, 20, lambda: ui.play(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars, dict_text_areas, dict_graphs),"none","none","w", dict_buttons, "silver")
     dict_buttons["Play"].config(font=("Courier", 24))
-    ui.add_button("Settings", ls_root[0], 20, 20, lambda: ui.settings(ls_root[1]),"Left","none","none", dict_buttons)
+    ui.add_button("Settings", dict_frames["mainmenu-sub-1"], 20, 20, lambda: ui.settings(ls_root[1]),"none","none","w", dict_buttons, "silver")
     dict_buttons["Settings"].config(font=("Courier", 24))
-    ui.add_button("Quit", ls_root[0], 20, 120, lambda: ui.quitgame(ls_root[0]),"Left","none","none", dict_buttons)
+    ui.add_button("Quit", dict_frames["mainmenu-sub-1"], 20, 120, lambda: ui.quitgame(ls_root[0]),"none","none","sw", dict_buttons, "silver")
     dict_buttons["Quit"].config(font=("Courier", 24))
 
-    ui.add_graph("FunGraph", ls_root[0], 20, 20, dict_graphs, width=900, height=700, x_range=(0, 100), y_range=(0, 100), update_frequency_secs=0.1, background="white", point_size=1, line_size=2, sticky="none")
+    ui.add_graph("FunGraph", dict_frames["mainmenu-sub-2"], 20, 20, dict_graphs, width=900, height=700, x_range=(0, misc.get_duration("MainMenu.wav")), y_range=(0,120), update_frequency_secs=0.1, background="Grey", point_size=1, line_size=2, sticky="none")
 
 
 
