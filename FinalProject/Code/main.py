@@ -31,10 +31,11 @@ def main():
     dict_vars["temperature_F"] = 32
     dict_vars["fun_value"] = rdm.randrange(0,100)
     dict_vars["play"] = False
+    dict_vars["current_speed"] = 0.0
     #the fun value is a variable hidden from the user that dictates the rate of occurance for random events.
     dict_vars["oxy_err"] = False
-    dict_vars["sens_err"] = False
-    dict_vars["align_err"] = False
+    dict_vars["enr_err"] = False
+    dict_vars["spd_err"] = False
     #create dictionaries and lists
     ls_root = [] #0=root 1=settings menu 2=main game window 3=psedo-terminal
     ls_terminal = [] #0=pseudo-terminal text area
@@ -126,17 +127,27 @@ def main():
 #------------------------------------------------------------------------------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------Propulsion Systems------------------------------------------------------------
-    ui.add_frame("middle-sub", dict_frames["top middle"], 1, 1, dict_frames, "none", "None", "light grey", "none", "none")
     
+    ui.add_frame("middle-sub-4", dict_frames["top middle"], 1, 1, dict_frames, "none", "None", "light grey", "none", "none")
     ui.add_frame("middle-sub-2", dict_frames["top middle"], 1, 1, dict_frames, "none", "None", "silver", "none", "none")
     ui.add_slider("Main Throttle", dict_frames["middle-sub-2"], 46, 20, dict_sliders, 0, "none")
-    ui.add_label("speed", dict_frames["middle-sub-2"], 5, 0, "Speed", dict_labels, "left", "none", "light grey", "none", "none")
+
+    ui.add_frame("middle-sub-3", dict_frames["middle-sub-4"], 1, 1, dict_frames, "left", "None", "silver", "y", "none")
+
+    ui.add_label("speed", dict_frames["middle-sub-3"], 5, 10, "Speed", dict_labels, "none", "none", "light grey", "x", "none")
     dict_labels["speed"].config(font=("Arial", 8))
-    ui.add_label("Speed", dict_frames["middle-sub-2"], 5, 5, "0 m/s", dict_labels, "none", "none", "light green", "x", "none")
+    ui.add_label("acceleration", dict_frames["middle-sub-3"], 5, 10, "Acceleration", dict_labels, "none", "none", "light grey", "x", "none")
+    dict_labels["acceleration"].config(font=("Arial", 8))
+
+    ui.add_frame("middle-sub", dict_frames["middle-sub-4"], 1, 1, dict_frames, "left", "None", "silver", "none", "none")
+
+    ui.add_label("Speed", dict_frames["middle-sub"], 5, 5, "0 m/s", dict_labels, "none", "none", "light green", "x", "none")
     dict_labels["Speed"].config(font=("Courier", 18))
+    ui.add_label("Acceleration", dict_frames["middle-sub"], 5, 5, "0 m/s", dict_labels, "none", "none", "light green", "x", "none")
+    dict_labels["Acceleration"].config(font=("Courier", 18))
 
     ui.add_frame("middle-sub-1", dict_frames["top middle"], 1, 1, dict_frames, "none", "None", "silver", "none", "none")
-    ui.add_graph("SpeedGraph", dict_frames["middle-sub-1"], 5, 10, dict_graphs, width=200, height=160, x_range=(0, 30), y_range=(0, 340), update_frequency_secs=0.5, background="black", point_size=0, line_size=2, sticky="none")
+    ui.add_graph("SpeedGraph", dict_frames["middle-sub-1"], 5, 10, dict_graphs, width=200, height=160, x_range=(0, 30), y_range=(0, 3400), update_frequency_secs=0.5, background="black", point_size=0, line_size=2, sticky="none")
 
     #more to add here just not right now
 #------------------------------------------------------------------------------------------------------------------------------------------------------

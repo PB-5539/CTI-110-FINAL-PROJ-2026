@@ -191,7 +191,9 @@ def analyze_audio_file(filepath):
 def loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars, dict_text_areas):
     tween_thread = None
     iteration_count = 0
-    
+    wait_until = 0
+    stored_speed = 0.0
+    acceleration = 0.0
     while True:
         #read all variables and write to local variables
         days = dict_vars["days"]
@@ -201,11 +203,14 @@ def loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_fram
         temperature_C = dict_vars["temperature_C"]
         temperature_F = dict_vars["temperature_F"]
         oxy_err = dict_vars["oxy_err"]
+        spd_error = dict_vars["spd_err"]
+        enr_error = dict_vars["enr_err"]
+        current_speed = dict_vars["current_speed"]
         iteration_count += 1
         
         # Only print every 100 iterations to reduce output
         if iteration_count % 100 == 0:
-            safe_print(f"[GAME LOOP] Iteration {iteration_count}")
+            safe_print(f"[GAME LOOP] Iteration {iteration_count} (once a second)")
 
 
 
@@ -217,27 +222,43 @@ def loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_fram
             tween_thread = th.Thread(target=misc.tween_slider, args=("Air Flow Rate", dict_sliders, rdm.randrange(5,185)), daemon=True)
             tween_thread.start()
             ls_threads.append(tween_thread)
-        if (dict_sliders["Air Flow Rate"].get() < 60):
-            if life_support_system_integrity > 5000 and life_support_system_integrity <= 15000:
-                als.send_alert("Oxygen levels low", 2, True, dict_text_areas, "alerts")
-            elif life_support_system_integrity <= 1000:
-                als.send_alert("Oxygen levels critical", 3, True, dict_text_areas, "alerts")
-            else:
-                als.send_alert("Oxygen levels falling", 1, False, dict_text_areas, "alerts")
-            oxy_err = True
-            life_support_system_integrity -= 3
-            tm.sleep(0.1)
-        elif (dict_sliders["Air Flow Rate"].get() > 130):
-            if life_support_system_integrity > 5000 and life_support_system_integrity <= 15000:
-                als.send_alert("Oxygen levels high", 2, True, dict_text_areas, "alerts")
-            elif life_support_system_integrity <= 1000:
-                als.send_alert("Oxygen levels critical", 3, True, dict_text_areas, "alerts")
-            else:
-                als.send_alert("Oxygen levels rising", 1, False, dict_text_areas, "alerts")
-            oxy_err = True
-            life_support_system_integrity -= 1
-            tm.sleep(0.1)
-        elif dict_sliders["Air Flow Rate"].get() >60 and dict_sliders["Air Flow Rate"].get() < 130:
+
+        if iteration_count % 10 == 0:  # Check every 10th of a second (0.1s)
+            if (dict_sliders["Air Flow Rate"].get() < 60):
+                if life_support_system_integrity > 5000 and life_support_system_integrity <= 15000:
+                    als.send_alert("Oxygen levels low", 2, True, dict_text_areas, "alerts")
+                elif life_support_system_integrity <= 1000:
+                    als.send_alert("Oxygen levels critical", 3, True, dict_text_areas, "alerts")
+                else:
+                    als.send_alert("Oxygen levels falling", 1, False, dict_text_areas, "alerts")
+                oxy_err = True
+                life_support_system_integrity -= 3
+                
+            elif (dict_sliders["Air Flow Rate"].get() > 130):
+                if life_support_system_integrity > 5000 and life_support_system_integrity <= 15000:
+                    als.send_alert("Oxygen levels high", 2, True, dict_text_areas, "alerts")
+                elif life_support_system_integrity <= 1000:
+                    als.send_alert("Oxygen levels critical", 3, True, dict_text_areas, "alerts")
+                else:
+                    als.send_alert("Oxygen levels rising", 1, False, dict_text_areas, "alerts")
+                oxy_err = True
+                life_support_system_integrity -= 1
+
+        if iteration_count == wait_until:
+            acceleration = abs(current_speed - stored_speed) / 0.1  # Speed change per second
+            print("calculating acceleration")
+        print("acceleration:", acceleration)
+        if iteration_count % 10 == 0:
+            wait_until = iteration_count + 10  # Wait for 0.1 second (10 iterations)
+            stored_speed = current_speed
+            queue_config("Acceleration", text=f"{acceleration:.2f} m/s")
+            print("storing speed")
+        
+        
+        #get speed and check if the change in speed is too much (more than 1500) <has yet to implement checks> and if it is then send an alert and decrease propulsion system integrity by 5 points every 0.1 seconds until it is back in the safe range of a change of  and if it reaches 0 then the game is over, also if the energy levels are too low then send an alert and decrease propulsion system integrity by 5 points every 0.1 seconds until it is back in the safe range of 0-100 and if it reaches 0 then the game is over.
+
+                
+        if dict_sliders["Air Flow Rate"].get() >60 and dict_sliders["Air Flow Rate"].get() < 130:
             oxy_err = False
             als.reset_alert_delay(("Oxygen levels low", 2, True))
             als.reset_alert_delay(("Oxygen levels critical", 3, True))
@@ -248,13 +269,8 @@ def loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_fram
             als.send_alert("Oxygen levels stable", 0, False, dict_text_areas, "alerts")
         #goal is to keep it within the range of 60-130 and not let it be out of that range for more than 60 seconds and not at any extreme values (<15 and >185) for more than 25 seconds, if it is then the life support system integrity will decrease by 10 points every 2.5 seconds until it is back in the safe range, if it reaches 0  then the game is over
         #each day a percentage of the remaining integrity of each item will be repaired.
+        tm.sleep(0.01)
         
-
-
-    #if you're looking for the where the commit message refrenced, it's not here anymore.
-
-
-
         #write mutable variable dictionary for reading in the main thread
         dict_vars["structural_integrity"] = structural_integrity
         dict_vars["life_support_system_integrity"] = life_support_system_integrity
@@ -365,14 +381,15 @@ def speed_thread(dict_sliders, dict_labels, dict_vars, dict_graphs):
         else:
             current_speed += speed_difference * 0.1
 
-        queue_config(speed_label_key, text=f"{current_speed:.2f} m/s")
+        queue_config(speed_label_key, text=f"{current_speed*10:.2f} m/s")
 
         accumulated_time += 0.1
         if accumulated_time >= update_interval:
             accumulated_time -= update_interval
-            queue_graph_update(graph_key, {"Speed": current_speed}, {"Speed": "light green"})
+            queue_graph_update(graph_key, {"Speed": current_speed * 10}, {"Speed": "light green"})
 
         tm.sleep(0.1)
+        dict_vars["current_speed"] = current_speed * 10  # Store in shared vars for main thread access
 #------------------------------------------------------------------------------------------------------------------------------------------------------
 
 def start_fun_thread(ls_threads, dict_vars):
