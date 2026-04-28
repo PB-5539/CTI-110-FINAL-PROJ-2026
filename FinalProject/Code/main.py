@@ -129,7 +129,7 @@ def main():
     ui.add_frame("middle-sub", dict_frames["top middle"], 1, 1, dict_frames, "none", "None", "light grey", "none", "none")
     
     ui.add_frame("middle-sub-2", dict_frames["top middle"], 1, 1, dict_frames, "none", "None", "silver", "none", "none")
-    ui.add_slider("Main Throttle", dict_frames["middle-sub-2"], 46, 20, dict_sliders, 100, "none")
+    ui.add_slider("Main Throttle", dict_frames["middle-sub-2"], 46, 20, dict_sliders, 0, "none")
     ui.add_label("speed", dict_frames["middle-sub-2"], 5, 0, "Speed", dict_labels, "left", "none", "light grey", "none", "none")
     dict_labels["speed"].config(font=("Arial", 8))
     ui.add_label("Speed", dict_frames["middle-sub-2"], 5, 5, "0 m/s", dict_labels, "none", "none", "light green", "x", "none")
@@ -138,9 +138,33 @@ def main():
     ui.add_frame("middle-sub-1", dict_frames["top middle"], 1, 1, dict_frames, "none", "None", "silver", "none", "none")
     ui.add_graph("SpeedGraph", dict_frames["middle-sub-1"], 5, 10, dict_graphs, width=200, height=160, x_range=(0, 30), y_range=(0, 340), update_frequency_secs=0.5, background="black", point_size=0, line_size=2, sticky="none")
 
+    #more to add here just not right now
 #------------------------------------------------------------------------------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------Structural Systems------------------------------------------------------------
+    ui.add_frame("right-sub", dict_frames["top right"], 1, 1, dict_frames, "none", "None", "light grey", "none", "none")
+
+    ui.add_frame("right-sub-sub-1", dict_frames["right-sub"], 1, 1, dict_frames, "left", "None", "light grey", "none", "none")
+    ui.add_button("Main Fuse", dict_frames["right-sub-sub-1"], 20, 1,lambda: print("Checking main fuse"),"none","x","none", dict_buttons)
+    ui.add_button("LFS Fuse", dict_frames["right-sub-sub-1"], 20, 1,lambda: print("Checking life support fuse"),"none","x","none", dict_buttons)
+    ui.add_button("Propulsion Fuse", dict_frames["right-sub-sub-1"], 20, 1,lambda: print("Checking propulsion fuse"),"none","x","none", dict_buttons)
+    ui.add_button("Computer Systems Fuse", dict_frames["right-sub-sub-1"], 20, 1,lambda: print("Checking computer systems fuse"),"none","x","none", dict_buttons)
+
+    ui.add_frame("right-sub-sub-2", dict_frames["right-sub"], 1, 1, dict_frames, "left", "None", "light grey", "x", "none")
+    ui.add_label("main fuse state", dict_frames["right-sub-sub-2"], 20, 1, "    ", dict_labels, "none", "none", "Green", "none", "none")
+    ui.add_label("LFS fuse state", dict_frames["right-sub-sub-2"], 20, 1, "    ", dict_labels, "none", "none", "Green", "none", "none")
+    ui.add_label("Propulsion fuse state", dict_frames["right-sub-sub-2"], 20, 1, "    ", dict_labels, "none", "none", "Green", "none", "none")
+    ui.add_label("Computer Systems fuse state", dict_frames["right-sub-sub-2"], 20, 1, "    ", dict_labels, "none", "none", "Green", "none", "none")
+
+
+    ui.add_frame("right-sub-1", dict_frames["top right"], 1, 1, dict_frames, "none", "None", "light grey", "none", "none")
+
+
+    ui.add_frame("right-sub-2", dict_frames["top right"], 1, 1, dict_frames, "none", "None", "light grey", "none", "none")
+
+
+    ui.add_frame("right-sub-3", dict_frames["top right"], 1, 1, dict_frames, "none", "None", "light grey", "none", "none")
+
 
 #------------------------------------------------------------------------------------------------------------------------------------------------------
 

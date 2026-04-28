@@ -247,6 +247,12 @@ def loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_fram
         #goal is to keep it within the range of 60-130 and not let it be out of that range for more than 60 seconds and not at any extreme values (<15 and >185) for more than 25 seconds, if it is then the life support system integrity will decrease by 10 points every 2.5 seconds until it is back in the safe range, if it reaches 0  then the game is over
         #each day a percentage of the remaining integrity of each item will be repaired.
         
+
+
+    #if you're looking for the where the commit message refrenced, it's not here anymore.
+
+
+
         #write mutable variable dictionary for reading in the main thread
         dict_vars["structural_integrity"] = structural_integrity
         dict_vars["life_support_system_integrity"] = life_support_system_integrity
