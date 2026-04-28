@@ -145,25 +145,54 @@ def main():
     ui.add_frame("right-sub", dict_frames["top right"], 1, 1, dict_frames, "none", "None", "light grey", "none", "none")
 
     ui.add_frame("right-sub-sub-1", dict_frames["right-sub"], 1, 1, dict_frames, "left", "None", "light grey", "none", "none")
-    ui.add_button("Main Fuse", dict_frames["right-sub-sub-1"], 20, 1,lambda: print("Checking main fuse"),"none","x","none", dict_buttons)
-    ui.add_button("LFS Fuse", dict_frames["right-sub-sub-1"], 20, 1,lambda: print("Checking life support fuse"),"none","x","none", dict_buttons)
-    ui.add_button("Propulsion Fuse", dict_frames["right-sub-sub-1"], 20, 1,lambda: print("Checking propulsion fuse"),"none","x","none", dict_buttons)
-    ui.add_button("Computer Systems Fuse", dict_frames["right-sub-sub-1"], 20, 1,lambda: print("Checking computer systems fuse"),"none","x","none", dict_buttons)
 
-    ui.add_frame("right-sub-sub-2", dict_frames["right-sub"], 1, 1, dict_frames, "left", "None", "light grey", "x", "none")
-    ui.add_label("main fuse state", dict_frames["right-sub-sub-2"], 20, 1, "    ", dict_labels, "none", "none", "Green", "none", "none")
-    ui.add_label("LFS fuse state", dict_frames["right-sub-sub-2"], 20, 1, "    ", dict_labels, "none", "none", "Green", "none", "none")
-    ui.add_label("Propulsion fuse state", dict_frames["right-sub-sub-2"], 20, 1, "    ", dict_labels, "none", "none", "Green", "none", "none")
-    ui.add_label("Computer Systems fuse state", dict_frames["right-sub-sub-2"], 20, 1, "    ", dict_labels, "none", "none", "Green", "none", "none")
+    ui.add_button("Main Fuse", dict_frames["right-sub-sub-1"], 5, 1,lambda: print("Checking main fuse"),"none","x","none", dict_buttons)
+    ui.add_button("LFS Fuse", dict_frames["right-sub-sub-1"], 5, 1,lambda: print("Checking life support fuse"),"none","x","none", dict_buttons)
+    ui.add_button("Propulsion Fuse", dict_frames["right-sub-sub-1"], 5, 1,lambda: print("Checking propulsion fuse"),"none","x","none", dict_buttons)
+    ui.add_button("Computer Systems Fuse", dict_frames["right-sub-sub-1"], 5, 1,lambda: print("Checking computer systems fuse"),"none","x","none", dict_buttons)
+
+    ui.add_frame("right-sub-sub-2", dict_frames["right-sub"], 1, 5, dict_frames, "left", "None", "light grey", "x", "none")
+    ui.add_label("main fuse state", dict_frames["right-sub-sub-2"], 2, 5, "    ", dict_labels, "none", "none", "Green", "none", "none")
+    ui.add_label("LFS fuse state", dict_frames["right-sub-sub-2"], 2, 1, "    ", dict_labels, "none", "none", "Green", "none", "none")
+    ui.add_label("Propulsion fuse state", dict_frames["right-sub-sub-2"], 2, 5, "    ", dict_labels, "none", "none", "Green", "none", "none")
+    ui.add_label("Computer Systems fuse state", dict_frames["right-sub-sub-2"], 2, 5, "    ", dict_labels, "none", "none", "Green", "none", "none")
+
+
+    ui.add_frame("right-sub-2", dict_frames["top right"], 1, 1, dict_frames, "none", "None", "light grey", "none", "none")
+    ui.add_label("Electrical Capacity", dict_frames["right-sub-2"], 5, 1, "Electrical Capacity", dict_labels, "left", "None", "light grey", "none", "none")
+    dict_labels["Electrical Capacity"].config(font=("Arial", 8))
+    ui.add_label("Electrical Capacity", dict_frames["right-sub-2"], 5, 5, "100%", dict_labels, "none", "none", "light green", "x", "none")
+    dict_labels["Electrical Capacity"].config(font=("Courier", 18))
+
+    ui.add_frame("right-sub-3", dict_frames["top right"], 1, 1, dict_frames, "none", "None", "light grey", "none", "none")
+
+
+
 
 
     ui.add_frame("right-sub-1", dict_frames["top right"], 1, 1, dict_frames, "none", "None", "light grey", "none", "none")
 
+    ui.add_frame("right-sub-1-sub-1", dict_frames["right-sub-1"], 1, 1, dict_frames, "left", "None", "light grey", "none", "none")
 
-    ui.add_frame("right-sub-2", dict_frames["top right"], 1, 1, dict_frames, "none", "None", "light grey", "none", "none")
+    ui.add_slider("Main PWR", dict_frames["right-sub-1-sub-1"], 10, 20, dict_sliders, 100, "none")
+    ui.add_slider("LFS PWR", dict_frames["right-sub-1-sub-1"], 10, 20, dict_sliders, 100, "none")
+    ui.add_slider("Propulsion PWR", dict_frames["right-sub-1-sub-1"], 10, 20, dict_sliders, 100, "none")
+    ui.add_slider("Computer Systems PWR", dict_frames["right-sub-1-sub-1"], 10, 20, dict_sliders, 100, "none")
+
+    ui.add_frame("right-sub-1-sub-2", dict_frames["right-sub-1"], 1, 1, dict_frames, "left", "None", "silver", "y", "none")
+
+    ui.add_label("main pwr label", dict_frames["right-sub-1-sub-2"], 5, 0, "10MW", dict_labels, "none", "none", "light grey", "x", "none")
+    dict_labels["main pwr label"].config(font=("Courier", 24), bg="Green")
+    ui.add_label("LFS pwr label", dict_frames["right-sub-1-sub-2"], 5, 0, "10MW", dict_labels, "none", "none", "light grey", "x", "none")
+    dict_labels["LFS pwr label"].config(font=("Courier", 24), bg="Green")
+    ui.add_label("Propulsion pwr label", dict_frames["right-sub-1-sub-2"], 5, 0, "10MW", dict_labels, "none", "none", "light grey", "x", "none")
+    dict_labels["Propulsion pwr label"].config(font=("Courier", 24), bg="Green")
+    ui.add_label("Computer Systems pwr label", dict_frames["right-sub-1-sub-2"], 5, 0, "10MW", dict_labels, "none", "none", "light grey", "x", "none")
+    dict_labels["Computer Systems pwr label"].config(font=("Courier", 24), bg="Green")
 
 
-    ui.add_frame("right-sub-3", dict_frames["top right"], 1, 1, dict_frames, "none", "None", "light grey", "none", "none")
+
+
 
 
 #------------------------------------------------------------------------------------------------------------------------------------------------------
