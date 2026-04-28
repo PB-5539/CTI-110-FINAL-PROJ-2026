@@ -73,7 +73,7 @@ def main():
     ui.add_button("Quit", dict_frames["mainmenu-sub-1"], 20, 120, lambda: ui.quitgame(ls_root[0]),"none","none","sw", dict_buttons, "silver")
     dict_buttons["Quit"].config(font=("Courier", 24))
 
-    ui.add_graph("FunGraph", dict_frames["mainmenu-sub-2"], 20, 20, dict_graphs, width=900, height=700, x_range=(0, misc.get_duration("MainMenu.wav")), y_range=(0,120), update_frequency_secs=0.1, background="Grey", point_size=1, line_size=2, sticky="none")
+    ui.add_graph("FunGraph", dict_frames["mainmenu-sub-2"], 20, 20, dict_graphs, width=900, height=600, x_range=(0, misc.get_duration("MainMenu.wav")), y_range=(0,120), update_frequency_secs=0.1, background="Grey", point_size=1, line_size=2, sticky="none")
 
 
 
