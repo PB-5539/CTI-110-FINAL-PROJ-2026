@@ -256,6 +256,10 @@ def loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_fram
         
         
         #get speed and check if the change in speed is too much (more than 1500) <has yet to implement checks> and if it is then send an alert and decrease propulsion system integrity by 5 points every 0.1 seconds until it is back in the safe range of a change of  and if it reaches 0 then the game is over, also if the energy levels are too low then send an alert and decrease propulsion system integrity by 5 points every 0.1 seconds until it is back in the safe range of 0-100 and if it reaches 0 then the game is over.
+        #to do for speed: implement a drift var that increases when the speed is higher than a threshold and decreases when it is lower than the threshold.
+                        # if drift is too high at the end of the day then it adds an extra day per (insert number) of drift to the target day of arrival.
+                        # alerts are send when drift increases as well as displaying how many days have been added to the ETA at the end of the day. NO DECIMAL DAY ADDITIONS.
+                        # also implement a system where if the speed is too low for too long then it also adds days to the ETA and sends alerts as well.
 
                 
         if dict_sliders["Air Flow Rate"].get() >60 and dict_sliders["Air Flow Rate"].get() < 130:
@@ -372,14 +376,14 @@ def speed_thread(dict_sliders, dict_labels, dict_vars, dict_graphs):
     while True:
         # Read current throttle from the shared tracking dictionary.
         target_throttle = slider_current_values.get(throttle_key, 100.0)
-        target_speed = target_throttle * (rdm.randint(300, 360) / 200.0)
+        target_speed = target_throttle * (rdm.randint(335, 340) / 200.0)
 
         # Move speed toward target using 10% of the remaining distance.
         speed_difference = target_speed - current_speed
         if abs(speed_difference) <= 0.1:
             current_speed = target_speed
         else:
-            current_speed += speed_difference * 0.1
+            current_speed += speed_difference * 0.01
 
         queue_config(speed_label_key, text=f"{current_speed*10:.2f} m/s")
 
