@@ -25,7 +25,7 @@ def main():
     dict_vars["current_cycle_week"] = 1
     dict_vars["current_cycle_tday"] = 0
     dict_vars["structural_integrity"] = 10000
-    dict_vars["life_support_system_integrity"] = 10000
+    dict_vars["life_support_system_integrity"] = 20000
     dict_vars["propulsion_system_integrity"] = 10000
     dict_vars["temperature_C"] = 0
     dict_vars["temperature_F"] = 32
@@ -173,7 +173,7 @@ def main():
     ui.add_frame("right-sub-1", dict_frames["top right"], 1, 1, dict_frames, "none", "None", "light grey", "none", "none")
 
     ui.add_frame("right-sub-1-sub-1", dict_frames["right-sub-1"], 1, 1, dict_frames, "left", "None", "light grey", "none", "none")
-
+#change Y pad to shrink the area to make space for other parts.
     ui.add_slider("Main PWR", dict_frames["right-sub-1-sub-1"], 10, 20, dict_sliders, 100, "none")
     ui.add_slider("LFS PWR", dict_frames["right-sub-1-sub-1"], 10, 20, dict_sliders, 100, "none")
     ui.add_slider("Propulsion PWR", dict_frames["right-sub-1-sub-1"], 10, 20, dict_sliders, 100, "none")
@@ -196,7 +196,6 @@ def main():
 
 
 #------------------------------------------------------------------------------------------------------------------------------------------------------
-
 
 #-------------------------------------------------------------------------AI----------------------------------------------------------------
 

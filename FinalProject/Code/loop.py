@@ -18,6 +18,8 @@ import tasks as tsk
 import alerts as als
 import pseudo_terminal as pt
 
+#use for loops for iterations of while loop running with a tm.sleep(0.01) at the end and check for whether how much has passed by a if (iteration) % 100 : #would run every second and still let other programs run seperatley.
+
 
 
 
@@ -223,7 +225,7 @@ def loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_fram
             else:
                 als.send_alert("Oxygen levels falling", 1, False, dict_text_areas, "alerts")
             oxy_err = True
-            life_support_system_integrity -= 10
+            life_support_system_integrity -= 3
             tm.sleep(0.1)
         elif (dict_sliders["Air Flow Rate"].get() > 130):
             if life_support_system_integrity > 5000 and life_support_system_integrity <= 15000:
@@ -233,7 +235,7 @@ def loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_fram
             else:
                 als.send_alert("Oxygen levels rising", 1, False, dict_text_areas, "alerts")
             oxy_err = True
-            life_support_system_integrity -= 3
+            life_support_system_integrity -= 1
             tm.sleep(0.1)
         elif dict_sliders["Air Flow Rate"].get() >60 and dict_sliders["Air Flow Rate"].get() < 130:
             oxy_err = False
@@ -383,7 +385,7 @@ def start_fun_thread(ls_threads, dict_vars):
 #modules are wierd, threading is wierder, it works now, thats all I care about.
 
 #----------------------------------------------------------------------------------------AI Modified Fun Thread--------------------------------------------------------------------------------------
-def fun_thread(dict_vars):  
+def fun_thread(dict_vars):
     while not dict_vars['play']:
         audio_file = "MainMenu.wav"
         safe_print("[FUN THREAD] Starting fun_thread")
