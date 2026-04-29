@@ -100,7 +100,7 @@ def start_terminal(ls_terminal, ls_root, dict_frames, dict_vars):
             text_area.see(tk.END)
             text_area.config(state=tk.DISABLED)
 
-    terminal = misc.DraggableWindow(dict_frames["main frame"], title="Terminal", x=80, y=80, w=650, h=500, color="black")
+    terminal = misc.DraggableWindow(ls_root[2], title="Terminal", x=80, y=80, w=650, h=500, color="black")
 
     text_area = tk.Text(terminal, bg="black", fg="white")
     text_area.pack(pady=1, fill=tk.BOTH, expand=True)

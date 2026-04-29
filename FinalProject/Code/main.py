@@ -32,10 +32,14 @@ def main():
     dict_vars["fun_value"] = rdm.randrange(0,100)
     dict_vars["play"] = False
     dict_vars["current_speed"] = 0.0
+    dict_vars["Extra ETA"] = 0
+    dict_vars["drift"] = 0
     #the fun value is a variable hidden from the user that dictates the rate of occurance for random events.
     dict_vars["oxy_err"] = False
     dict_vars["enr_err"] = False
     dict_vars["spd_err"] = False
+    dict_vars["temp_err"] = False
+    dict_vars["Game Over"] = False
     #create dictionaries and lists
     ls_root = [] #0=root 1=settings menu 2=main game window 3=psedo-terminal
     ls_terminal = [] #0=pseudo-terminal text area

@@ -194,27 +194,68 @@ def loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_fram
     wait_until = 0
     stored_speed = 0.0
     acceleration = 0.0
-    while True:
+    GOW_EXISTS = False
+    while not dict_vars["Game Over"]:
+        import tkinter as tk  # Ensure tkinter is imported in this thread for uses
         #read all variables and write to local variables
         days = dict_vars["days"]
         current_cycle = dict_vars["current_cycle"]
         structural_integrity = dict_vars["structural_integrity"]
         life_support_system_integrity = dict_vars["life_support_system_integrity"]
+        propulsion_system_integrity = dict_vars["propulsion_system_integrity"]
         temperature_C = dict_vars["temperature_C"]
         temperature_F = dict_vars["temperature_F"]
         oxy_err = dict_vars["oxy_err"]
         spd_error = dict_vars["spd_err"]
         enr_error = dict_vars["enr_err"]
         current_speed = dict_vars["current_speed"]
+        extra_eta = dict_vars["Extra ETA"]
+        drift = dict_vars["drift"]
         iteration_count += 1
         
         # Only print every 100 iterations to reduce output
         if iteration_count % 100 == 0:
             safe_print(f"[GAME LOOP] Iteration {iteration_count} (once a second)")
 
-
-
         
+        #Game over logic
+        if structural_integrity <= 0:
+            if not GOW_EXISTS:
+                GOW = tk.Toplevel()
+                GOW.title("Game Over")
+                tk.Label(GOW, text="Game Over: Structural Integrity Failure", font=("Arial", 16)).pack(pady=20)
+                tk.Label(GOW, text= "You blew a hole in the hull and the vacuum of space sucked you out, you are now lost in space forever", font=("Arial", 12)).pack(pady=10)
+                button = tk.Button(GOW, text="Exit Game", command=lambda: ui.quitgame(ls_root[0]))
+                button.pack(pady=10)
+                GOW_EXISTS = True
+
+        elif life_support_system_integrity <= 0:
+            if not GOW_EXISTS:
+                GOW = tk.Toplevel()
+                GOW.title("Game Over")
+                tk.Label(GOW, text="Game Over: Life Support System Failure", font=("Arial", 16)).pack(pady=20)
+                tk.Label(GOW, text= "Your oxygen levels dropped too low and you suffocated, you are now dead in space forever", font=("Arial", 12)).pack(pady=10)
+                button = tk.Button(GOW, text="Exit Game", command=lambda: ui.quitgame(ls_root[0]))
+                button.pack(pady=10)
+                GOW_EXISTS = True
+        elif propulsion_system_integrity <= 0:
+            if not GOW_EXISTS:
+                GOW = tk.Toplevel()
+                GOW.title("Game Over")
+                tk.Label(GOW, text="Game Over: Propulsion System Failure", font=("Arial", 16)).pack(pady=20)
+                tk.Label(GOW, text= "Your propulsion system broke down and you are now stranded in space forever", font=("Arial", 12)).pack(pady=10)
+                button = tk.Button(GOW, text="Exit Game", command=lambda: ui.quitgame(ls_root[0]))
+                button.pack(pady=10)
+                GOW_EXISTS = True
+        elif extra_eta >= 10:
+            if not GOW_EXISTS:
+                GOW = tk.Toplevel()
+                GOW.title("Game Over")
+                tk.Label(GOW, text="Game Over: Excessive Drift", font=("Arial", 16)).pack(pady=20)
+                tk.Label(GOW, text= "You went so far off course you ended up passing by Gargantia, the largest black hole in the area, and because of this your relative time was so warped that there was no where left to go. You are now lost in space forever", font=("Arial", 12)).pack(pady=10)
+                button = tk.Button(GOW, text="Exit Game", command=lambda: ui.quitgame(ls_root[0]))
+                button.pack(pady=10)
+                GOW_EXISTS = True
         #Main Game Logic---------------------\/
         
         
@@ -246,20 +287,42 @@ def loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_fram
 
         if iteration_count == wait_until:
             acceleration = abs(current_speed - stored_speed) / 0.1  # Speed change per second
-            print("calculating acceleration")
-        print("acceleration:", acceleration)
+
         if iteration_count % 10 == 0:
             wait_until = iteration_count + 10  # Wait for 0.1 second (10 iterations)
             stored_speed = current_speed
             queue_config("Acceleration", text=f"{acceleration:.2f} m/s")
-            print("storing speed")
+
         
         
-        #get speed and check if the change in speed is too much (more than 1500) <has yet to implement checks> and if it is then send an alert and decrease propulsion system integrity by 5 points every 0.1 seconds until it is back in the safe range of a change of  and if it reaches 0 then the game is over, also if the energy levels are too low then send an alert and decrease propulsion system integrity by 5 points every 0.1 seconds until it is back in the safe range of 0-100 and if it reaches 0 then the game is over.
+        #get speed and check if the change in speed is too much (more than 1400 and less than 600) <has yet to implement checks> and if it is then send an alert and decrease propulsion system integrity by 5 points every 0.1 seconds until it is back in the safe range of a change of  and if it reaches 0 then the game is over, also if the energy levels are too low then send an alert and decrease propulsion system integrity by 5 points every 0.1 seconds until it is back in the safe range of 0-100 and if it reaches 0 then the game is over.
         #to do for speed: implement a drift var that increases when the speed is higher than a threshold and decreases when it is lower than the threshold.
                         # if drift is too high at the end of the day then it adds an extra day per (insert number) of drift to the target day of arrival.
                         # alerts are send when drift increases as well as displaying how many days have been added to the ETA at the end of the day. NO DECIMAL DAY ADDITIONS.
                         # also implement a system where if the speed is too low for too long then it also adds days to the ETA and sends alerts as well.
+                        # acceleration should stay less than 540 m/s
+                        # integrity cost will be the base value * (Acceleration / 550)
+
+        #speed damage checks
+        if acceleration > 380:
+            als.send_alert("Excessive acceleration detected", 3, True, dict_text_areas, "alerts")
+            spd_error = True
+            if iteration_count % 10 == 0:
+                propulsion_system_integrity -= int(20 * (acceleration / 380))
+                structural_integrity -= int(10 * (acceleration / 380))
+
+        else:
+            spd_error = False
+        if current_speed > 1300:
+            als.send_alert("Excessive speed detected", 3, True, dict_text_areas, "alerts")
+            spd_error = True
+            if iteration_count % 10 == 0:
+                propulsion_system_integrity -= int(10 * (current_speed / 1300))
+                structural_integrity -= int(5 * (current_speed / 1300))
+            if iteration_count % 1000 == 0:
+                drift += 1
+                print (f"drift increased to {drift}")
+            
 
                 
         if dict_sliders["Air Flow Rate"].get() >60 and dict_sliders["Air Flow Rate"].get() < 130:
@@ -270,7 +333,6 @@ def loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_fram
             als.reset_alert_delay(("Oxygen levels high", 2, True))
             als.reset_alert_delay(("Oxygen levels critical", 3, True))
             als.reset_alert_delay(("Oxygen levels rising", 1, False))
-            als.send_alert("Oxygen levels stable", 0, False, dict_text_areas, "alerts")
         #goal is to keep it within the range of 60-130 and not let it be out of that range for more than 60 seconds and not at any extreme values (<15 and >185) for more than 25 seconds, if it is then the life support system integrity will decrease by 10 points every 2.5 seconds until it is back in the safe range, if it reaches 0  then the game is over
         #each day a percentage of the remaining integrity of each item will be repaired.
         tm.sleep(0.01)
@@ -281,6 +343,10 @@ def loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_fram
         dict_vars["temperature_C"] = temperature_C
         dict_vars["temperature_F"] = temperature_F
         dict_vars["oxy_err"] = oxy_err
+        dict_vars["spd_err"] = spd_error
+        dict_vars["enr_err"] = enr_error
+        dict_vars["Extra ETA"] = extra_eta
+        dict_vars["drift"] = drift
         #Main Game logic---------------------/\
 
 def begin_loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict_labels, dict_sliders, dict_vars, dict_text_areas):
@@ -297,7 +363,7 @@ def day_loop(ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict
     true_day = dict_vars["current_cycle_tday"]
     #MAIN DAY CYCLE TIMING LOGIC ----------\/
     #stuff
-    while true_day <= dict_vars["days"]:
+    while true_day <= dict_vars["days"] and not dict_vars["Game Over"]:
         day = dict_vars["current_cycle"]
         week = dict_vars["current_cycle_week"]
         if (day + 1)>7:
@@ -339,7 +405,13 @@ def day_loop(ls_root, ls_terminal, dict_buttons, dict_entries, dict_frames, dict
             safe_print(f"[DAY LOOP] Day: {day} Week: {week}")
             safe_print(f"[DAY LOOP] Tomorrow will be Day: {tomorrow}")
             safe_print(f"[DAY LOOP] True day: {true_day}")
-
+        if dict_vars["drift"] > 4:
+                extra_days = dict_vars["drift"] // 5  # Example: 1 extra day for every 5 drift points
+                dict_vars["Extra ETA"] += extra_days
+                safe_print(f"[DAY LOOP] Drift added {extra_days} days to ETA. Total Extra ETA: {dict_vars['Extra ETA']} days")
+                als.send_alert(f"Drift added {extra_days} days to ETA", 2, True, dict_text_areas, "alerts")
+                als.send_alert(f"Current total Extra ETA: {dict_vars['Extra ETA']} days", 1, False, dict_text_areas, "alerts")
+                dict_vars["drift"] = 0  # Reset drift after applying extra days
         dict_vars["current_cycle"] = day
         dict_vars["current_cycle_week"] = week
         dict_vars["current_cycle_tday"] = true_day
@@ -373,10 +445,10 @@ def speed_thread(dict_sliders, dict_labels, dict_vars, dict_graphs):
     accumulated_time = 0.0
     update_interval = dict_graphs[graph_key].update_frequency_secs if graph_key in dict_graphs else 1.0
 
-    while True:
+    while not dict_vars["Game Over"]:
         # Read current throttle from the shared tracking dictionary.
         target_throttle = slider_current_values.get(throttle_key, 100.0)
-        target_speed = target_throttle * (rdm.randint(335, 340) / 200.0)
+        target_speed = target_throttle * (340 / 200.0)
 
         # Move speed toward target using 10% of the remaining distance.
         speed_difference = target_speed - current_speed

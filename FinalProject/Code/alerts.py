@@ -17,7 +17,7 @@ def send_alert(text, urgency, sound, dict_text_areas=None, text_area_name=None):
     # Check if this alert was sent recently (within 30 seconds)
     if alert_key in _alert_history:
         last_sent_time = _alert_history[alert_key]
-        if current_time - last_sent_time < 30:
+        if current_time - last_sent_time < 10:
             return  # Don't send, too recent
     
     # Update the last send time for this alert
