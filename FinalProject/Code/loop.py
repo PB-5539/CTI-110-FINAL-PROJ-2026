@@ -322,7 +322,19 @@ def loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_fram
             if iteration_count % 1000 == 0:
                 drift += 1
                 print (f"drift increased to {drift}")
-            
+
+        temperature_F = int(dict_labels["Temperature"].cget("text").split()[0])
+        temperature_C = (float(temperature_F) - 32) * 5.0/9.0
+
+        if dict_labels["AC state"].cget("text").lower() == "on":
+            if iteration_count % 500 == 0:
+                temperature_F -= 1
+        if dict_labels["Heat state"].cget("text").lower() == "on":
+            if iteration_count % 500 == 0:
+                temperature_F += 1
+
+        if iteration_count % 1000 == 0:
+            temperature_F += rdm.randrange(-2,2)
 
                 
         if dict_sliders["Air Flow Rate"].get() >60 and dict_sliders["Air Flow Rate"].get() < 130:
@@ -333,6 +345,7 @@ def loop(ls_threads, ls_root, ls_terminal, dict_buttons, dict_entries, dict_fram
             als.reset_alert_delay(("Oxygen levels high", 2, True))
             als.reset_alert_delay(("Oxygen levels critical", 3, True))
             als.reset_alert_delay(("Oxygen levels rising", 1, False))
+        queue_config("Temperature", text=f"{temperature_F}")
         #goal is to keep it within the range of 60-130 and not let it be out of that range for more than 60 seconds and not at any extreme values (<15 and >185) for more than 25 seconds, if it is then the life support system integrity will decrease by 10 points every 2.5 seconds until it is back in the safe range, if it reaches 0  then the game is over
         #each day a percentage of the remaining integrity of each item will be repaired.
         tm.sleep(0.01)
