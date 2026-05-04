@@ -2,6 +2,8 @@ IN ORDER TO RUN THIS PROGRAM IT NEEDS TO BE CONTAINED WITHIN THE 'FinalProject' 
 YOU MUST LAUNCH 'main.py' TO PLAY THE GAME 
 THIS IS A WINDOWS ONLY PROGRAM AS IT MAKES USE OF THE WINDOWS SOUND API
 
+alternativley, pull the entire repository and use the Run.bat file to launch the game.
+
 
 
 
