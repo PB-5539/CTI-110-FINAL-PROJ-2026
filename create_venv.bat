@@ -12,8 +12,7 @@ if not exist ".please_work\Scripts\activate.bat" (
 echo Failed to create Virtual Environment. Please open an issue on GitHub to report this problem.
 echo ------------------------------------------------------------------------------------------
 pause >nul
-exit /b
-)
+exit /b)
 echo Virtual Environment created successfully.
 echo ------------------------------------------------------------------------------------------
 echo Installing dependencies...
@@ -30,5 +29,4 @@ if not exist "finalproject\requirements.txt" (
 echo requirements.txt not found. Please open an issue on GitHub to report this problem.
 echo ------------------------------------------------------------------------------------------
 pause >nul
-exit /b
-)
+exit /b)
